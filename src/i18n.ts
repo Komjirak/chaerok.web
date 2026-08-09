@@ -39,6 +39,23 @@ export function regionLanguage(): 'ko' | 'en' {
 }
 
 /**
+ * 크롤러 판정 — 심사·검색 봇은 지역 이동의 대상이 아니다.
+ *
+ * 구글 OAuth 브랜드 심사는 미국에서 JS까지 렌더링해 홈페이지를 읽는다.
+ * 저장된 선택이 없고 지역이 한국 밖이니 LanguageGate가 `/en`으로 옮겼고,
+ * 심사는 영어 페이지("Chaerok")를 보고 "앱 이름('채록(chaerok)') 불일치 ·
+ * 목적 설명 없음"으로 떨어졌다(08-09 실사고). 봇에게는 주소 그대로의
+ * 언어를 보여준다 — hreflang이 이미 언어별 주소를 알려주고 있다.
+ */
+export function isCrawler(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  if (navigator.webdriver) return true;
+  return /bot|spider|crawl|yeti|google-inspectiontool|chrome-lighthouse|slurp/i.test(
+    navigator.userAgent,
+  );
+}
+
+/**
  * 초기 언어 — **주소가 가장 세다.**
  *
  * 예전에는 주소가 하나뿐이라 로캘로만 정했는데, 그러면 미국 로캘로 도는

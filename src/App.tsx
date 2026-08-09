@@ -24,7 +24,7 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { trackPageView } from '@/lib/track';
-import { isEnglishPath, savedLanguage, regionLanguage } from '@/i18n';
+import { isEnglishPath, savedLanguage, regionLanguage, isCrawler } from '@/i18n';
 
 function Home() {
   const { hash } = useLocation();
@@ -109,6 +109,9 @@ function LanguageGate() {
     if (english || languageFreePath) return;
     if (savedLanguage()) return;
     if (regionLanguage() === 'ko') return;
+    // 봇은 옮기지 않는다 — OAuth 브랜드 심사가 /en으로 끌려가 한국어 홈의
+    // 앱 이름·설명을 못 보는 실사고가 있었다(isCrawler 주석 참고)
+    if (isCrawler()) return;
     navigate(`/en${pathname === '/' ? '' : pathname}`, { replace: true });
   }, [english, languageFreePath, pathname, navigate]);
 

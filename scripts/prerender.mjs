@@ -53,10 +53,13 @@ function homeShell(lang) {
   const home = lang === 'ko' ? '/' : '/en';
   return `
 <header class="s-top">
-  <p class="s-brand">채록 chaerok</p>
+  <p class="s-brand">채록(chaerok)</p>
 </header>
 <main>
   <h1>${esc(hero.title1)} ${esc(hero.title2)}</h1>
+  <!-- OAuth 브랜드 심사가 홈에서 찾는 두 가지: 콘솔과 똑같은 앱 이름 + 목적 설명.
+       문장은 검색 메타(META desc)를 재사용한다 — 새 카피를 만들지 않는다. -->
+  <p class="s-lede">${esc(META[lang]['/'].desc)}</p>
   <p class="s-lede">${esc(hero.desc)}</p>
   <p class="s-note">${esc(hero.floatingDesc)}</p>
 
@@ -120,7 +123,7 @@ function homeShell(lang) {
 function pageShell(lang, heading, lede) {
   const home = lang === 'ko' ? '/' : '/en';
   return `
-<header class="s-top"><p class="s-brand"><a href="${home}">채록 chaerok</a></p></header>
+<header class="s-top"><p class="s-brand"><a href="${home}">채록(chaerok)</a></p></header>
 <main>
   <h1>${esc(heading)}</h1>
   <p class="s-lede">${esc(lede)}</p>
@@ -213,7 +216,7 @@ const jsonLd = (nodes) =>
 const META = {
   ko: {
     '/': {
-      title: '채록 — 던지면 AI가 정리하는 당신의 두 번째 뇌 | 메모·링크·스크린샷 자동 요약',
+      title: '채록(chaerok) — 던지면 AI가 정리하는 당신의 두 번째 뇌 | 메모·링크·스크린샷 자동 요약',
       desc: '채록은 텍스트·링크·사진을 던져 넣으면 AI 에이전트 채록이가 요약·태그·분류하고 관련 기록끼리 이어주는 개인 지식관리(두 번째 뇌) 앱입니다. 기본은 기기 안 처리이고, 무료로 시작할 수 있습니다.',
     },
     '/terms': {
