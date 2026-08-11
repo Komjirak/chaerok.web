@@ -147,14 +147,38 @@ export function Notes() {
             />
           </label>
 
+          {/*
+            어느 계정의 기록인지가 화면에 없어 "지금 뭘 보고 있는 거지"가 됐다
+            (PO 08-11 — 등급 표류 사고를 짚는 동안 계정을 확인할 방법이 없었다).
+            이메일이 등급 배지보다 먼저다: 배지는 계정의 속성이라, 주어 없이
+            속성만 있으면 반쪽 정보다. 좁은 화면에서는 이메일을 줄이되
+            title로 전체를 남긴다.
+          */}
+          <span
+            className="ml-auto flex items-center gap-2 min-w-0"
+            title={user?.email ?? undefined}
+          >
+            {user?.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt=""
+                referrerPolicy="no-referrer"
+                className="w-5 h-5 rounded-full shrink-0"
+              />
+            ) : null}
+            <span className="text-xs text-ink-muted truncate max-w-[120px] sm:max-w-[220px]">
+              {user?.email ?? user?.displayName ?? ''}
+            </span>
+          </span>
+
           <span
             className={
               tier === 'pro'
-                ? 'ml-auto text-xs font-medium px-2.5 py-1 rounded-full bg-surface-amber text-chaerok-800'
-                : 'ml-auto text-xs font-medium px-2.5 py-1 rounded-full bg-surface-white border border-surface-amber text-ink-muted'
+                ? 'shrink-0 text-xs font-medium px-2.5 py-1 rounded-full bg-surface-amber text-chaerok-800'
+                : 'shrink-0 text-xs font-medium px-2.5 py-1 rounded-full bg-surface-white border border-surface-amber text-ink-muted'
             }
           >
-            {tier === 'pro' ? 'Pro 요금제 사용중' : isEn ? 'Free' : '무료'}
+            {tier === 'pro' ? (isEn ? 'Pro plan' : 'Pro 요금제 사용중') : isEn ? 'Free' : '무료'}
           </span>
 
           <button

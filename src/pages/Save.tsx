@@ -251,6 +251,16 @@ export function Save() {
             <Button className="w-full" onClick={save}>
               {isEn ? 'Let Chaerok organize it' : '채록이에게 정리 맡기기'}
             </Button>
+
+            {/* 어느 계정의 생각 노트로 가는지 — 계정을 여럿 쓰는 사람이
+                엉뚱한 곳에 담고 나서야 아는 것을 담기 전에 알게 한다 */}
+            {user.email ? (
+              <p className="mt-3 text-center text-xs text-ink-muted/80 break-all">
+                {isEn
+                  ? `Saves to ${user.email}`
+                  : `${user.email} 계정의 생각 노트에 담겨요`}
+              </p>
+            ) : null}
           </>
         ) : step === 'busy' ? (
           <div className="text-center py-10">
