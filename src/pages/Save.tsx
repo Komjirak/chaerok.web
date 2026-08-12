@@ -1,6 +1,5 @@
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
 import { doc, setDoc } from 'firebase/firestore';
 import { AlertTriangle, Check, Lock, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -30,6 +29,48 @@ import { trackEvent } from '@/lib/track';
 
 type Step = 'form' | 'busy' | 'done' | 'fail';
 
+/**
+ * 익스텐션이 넘긴 쿼리를 읽고 **즉시 주소창에서 지운다**.
+ *
+ * Firebase 로그인은 팝업·리다이렉트 모두 "돌아올 주소"로 현재 URL 전체를
+ * 로그인 핸들러 URL에 실어 보낸다. 본문 쿼리가 12KB까지 갈 수 있어서 그대로
+ * 두면 핸들러가 414(URI Too Long)를 뱉는다 — 로그아웃 상태에서 긴 페이지를
+ * 담으려던 사용자가 정확히 이 벽에 부딪힌다. sessionStorage에 보관해 두므로
+ * 새로 고침·모바일 리다이렉트 복귀에도 내용은 살아 있다.
+ */
+const PAYLOAD_KEY = 'chaerok:savePayload';
+
+interface PagePayload {
+  url: string;
+  title: string;
+  text: string;
+}
+
+function readPayloadOnce(): PagePayload {
+  const qs = new URLSearchParams(window.location.search);
+  if (qs.has('url') || qs.has('title') || qs.has('text')) {
+    const p: PagePayload = {
+      url: qs.get('url') ?? '',
+      title: qs.get('title') ?? '',
+      text: qs.get('text') ?? '',
+    };
+    try {
+      sessionStorage.setItem(PAYLOAD_KEY, JSON.stringify(p));
+    } catch {
+      // 저장 실패(시크릿 모드 등)여도 이번 세션의 state로는 동작한다
+    }
+    window.history.replaceState(null, '', window.location.pathname);
+    return p;
+  }
+  try {
+    const stored = sessionStorage.getItem(PAYLOAD_KEY);
+    if (stored) return JSON.parse(stored) as PagePayload;
+  } catch {
+    // 깨진 값은 빈 payload로 흘려보낸다
+  }
+  return { url: '', title: '', text: '' };
+}
+
 interface Analyzed {
   title: string;
   summary: string;
@@ -41,16 +82,8 @@ export function Save() {
   const { i18n } = useTranslation();
   const isEn = i18n.language === 'en';
   const { user, tier, loading, signIn, signOutNow, error: authError } = useChaerokSession(isEn);
-  const [params] = useSearchParams();
-
-  const page = useMemo(
-    () => ({
-      url: params.get('url') ?? '',
-      title: params.get('title') ?? '',
-      text: params.get('text') ?? '',
-    }),
-    [params],
-  );
+  // 게으른 초기화 — 첫 렌더에서 딱 한 번 쿼리를 읽고 주소창을 비운다
+  const [page] = useState(readPayloadOnce);
 
   const [memo, setMemo] = useState('');
   const [step, setStep] = useState<Step>('form');
