@@ -86,20 +86,13 @@ export function useChaerokSession(isEn: boolean): ChaerokSession {
   const signIn = async () => {
     setError(null);
     const provider = new GoogleAuthProvider();
-    // 리다이렉트는 진짜 모바일 기기에서만. 이전에는 창 폭(<768px)도 조건이라
-    // 익스텐션이 여는 460px 담기 창이 데스크톱 크롬에서 리다이렉트를 탔는데,
-    // 크롬의 서드파티 스토리지 분리 때문에 복귀 후 세션이 남지 않아
-    // "로그인 → 다시 로그인 화면" 무한 루프가 됐다. 데스크톱은 창이 작아도
-    // 팝업 로그인이 정상 동작한다(팝업 차단 시에만 아래에서 리다이렉트 폴백).
-    const useRedirect =
-      typeof window !== 'undefined' &&
-      /Android|iPhone|iPad|iPod/i.test(window.navigator.userAgent);
-
+    // 어디서나 팝업이 기본이다. 리다이렉트는 authDomain(firebaseapp.com)이
+    // 다른 출처라 복귀 세션이 서드파티 저장소에 남아야 하는데, 요즘 브라우저는
+    // 그걸 막는다 — 데스크톱 익스텐션 창(08-11)에 이어 모바일 Safari/Chrome
+    // 에서도(08-13) "로그인 → 다시 로그인 화면" 루프로 실증됐다. 팝업은 창끼리
+    // postMessage로 끝나 저장소 분리와 무관하다. 리다이렉트는 팝업이 차단된
+    // 경우의 마지막 폴백으로만 남긴다.
     try {
-      if (useRedirect) {
-        await signInWithRedirect(auth(), provider);
-        return;
-      }
       await signInWithPopup(auth(), provider);
     } catch (e) {
       const code = (e as { code?: string })?.code;
