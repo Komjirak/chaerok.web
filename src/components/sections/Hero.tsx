@@ -55,9 +55,10 @@ function BackgroundElements() {
  * 기반 영상이 생기면서 교체했다(08-12). 화면·문구가 전부 실제 제품이라
  * 목업이 약속하고 제품이 못 지키는 어긋남이 원천적으로 없다.
  * 움직임 줄이기(prefers-reduced-motion) 설정에서는 포스터 한 장만 보여준다.
+ * 언어별로 같은 구성의 영상이 따로 있다 — 영어 UI면 영어 패널 버전을 튼다.
  */
 function PromoVideo() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -67,19 +68,25 @@ function PromoVideo() {
     return () => mq.removeEventListener('change', on);
   }, []);
 
+  const en = i18n.language?.toLowerCase().startsWith('en');
+  const videoSrc = en ? '/promo-hero-en.mp4' : '/promo-hero.mp4';
+  const posterSrc = en ? '/promo-hero-en-poster.jpg' : '/promo-hero-poster.jpg';
+
   return (
     <div className="relative w-full max-w-[320px] aspect-[9/16] rounded-[32px] overflow-hidden shadow-ambient bg-[#8C3A1E]">
       {reduced ? (
         <img
-          src="/promo-hero-poster.jpg"
+          src={posterSrc}
           alt={t('hero.videoAlt', '채록 앱 소개 영상')}
           className="h-full w-full object-cover"
         />
       ) : (
         <video
+          // src만 바꾸면 재생 중인 영상이 갈리지 않는다 — key로 강제 재마운트
+          key={videoSrc}
           className="h-full w-full object-cover"
-          src="/promo-hero.mp4"
-          poster="/promo-hero-poster.jpg"
+          src={videoSrc}
+          poster={posterSrc}
           autoPlay
           muted
           loop
