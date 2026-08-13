@@ -6,10 +6,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-const APP_STORE_URL = 'https://apps.apple.com/kr/app/id6794663892';
-const PLAY_TESTING_URL = 'https://play.google.com/apps/testing/com.chaerok.komjirak';
-/** 웹스토어 승인 완료(2026-08-05) — 소개 절로 스크롤하지 않고 바로 설치로 보낸다 */
-const CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/pnndjhdcffpjmekjiknakoakablpocli';
+import { APP_STORE_URL, PLAY_TESTING_URL, CHROME_STORE_URL } from '@/lib/storeLinks';
 
 function BackgroundElements() {
   return (

@@ -4,6 +4,7 @@ import { Share2, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logoImg from '@/assets/logo.png';
 import { LANG_STORAGE_KEY } from '@/i18n';
+import { APP_STORE_URL, PLAY_TESTING_URL, CHROME_STORE_URL } from '@/lib/storeLinks';
 import { useLocalePath, counterpartPath } from '@/lib/localePath';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -66,11 +67,20 @@ export function Footer() {
             <span className="font-serif font-semibold text-2xl tracking-tight">{t('footer.title')}</span>
           </div>
           
-          <div className="flex flex-wrap gap-8 text-sm text-ink-muted font-medium">
-            <Link to={lp("/privacy")} className="hover:text-ink-dark transition-colors">{t('footer.link.privacy')}</Link>
-            <Link to={lp("/terms")} className="hover:text-ink-dark transition-colors">{t('footer.link.terms')}</Link>
-            <Link to={lp("/delete-account")} className="hover:text-ink-dark transition-colors">{t('footer.link.deleteAccount')}</Link>
-            <a href="https://komjirak.studio" target="_blank" rel="noopener noreferrer" className="hover:text-ink-dark transition-colors">{t('footer.link.contact')}</a>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap gap-8 text-sm text-ink-muted font-medium">
+              <Link to={lp("/privacy")} className="hover:text-ink-dark transition-colors">{t('footer.link.privacy')}</Link>
+              <Link to={lp("/terms")} className="hover:text-ink-dark transition-colors">{t('footer.link.terms')}</Link>
+              <Link to={lp("/delete-account")} className="hover:text-ink-dark transition-colors">{t('footer.link.deleteAccount')}</Link>
+              <a href="https://komjirak.studio" target="_blank" rel="noopener noreferrer" className="hover:text-ink-dark transition-colors">{t('footer.link.contact')}</a>
+            </div>
+            {/* 받는 곳 — 히어로와 같은 링크(storeLinks 단일 출처). 스토어 이름은 고유명사라 번역하지 않는다 */}
+            <div className="flex flex-wrap gap-8 text-sm text-ink-muted font-medium">
+              <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-ink-dark transition-colors">App Store</a>
+              <a href={PLAY_TESTING_URL} target="_blank" rel="noopener noreferrer" className="hover:text-ink-dark transition-colors">Google Play</a>
+              <Link to="/notes" className="hover:text-ink-dark transition-colors">Web App</Link>
+              <a href={CHROME_STORE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-ink-dark transition-colors">Chrome Extension</a>
+            </div>
           </div>
           
           <div className="flex gap-4 relative">
