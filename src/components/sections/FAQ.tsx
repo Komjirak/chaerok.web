@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '../ui/Button';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { APP_STORE_URL, PLAY_TESTING_URL } from '@/lib/storeLinks';
 
 export function FAQ() {
   const { t } = useTranslation();
@@ -71,14 +72,14 @@ export function FAQ() {
           <p className="text-ink-muted mb-10">{t('faq.cta.desc')}</p>
           
           <div className="flex flex-row flex-wrap justify-center gap-2 sm:gap-4">
-            <Button size="lg" className="bg-ink-dark hover:bg-ink-dark/80 px-4 sm:px-6 h-auto py-3 flex-col gap-1 text-white">
+            <Button size="lg" className="bg-ink-dark hover:bg-ink-dark/80 px-4 sm:px-6 h-auto py-3 flex-col gap-1 text-white" onClick={() => window.open(APP_STORE_URL, '_blank', 'noopener')}>
               <Apple className="w-6 h-6 mb-1" />
               <div className="flex flex-col items-center leading-tight">
                 <span className="text-[10px] sm:text-xs text-white/80">{t('faq.cta.btnAppStorePrefix')}</span>
                 <span className="text-sm font-semibold">{t('faq.cta.btnAppStoreAction')}</span>
               </div>
             </Button>
-            <Button size="lg" className="bg-ink-dark hover:bg-ink-dark/80 px-4 sm:px-6 h-auto py-3 flex-col gap-1 text-white">
+            <Button size="lg" className="bg-ink-dark hover:bg-ink-dark/80 px-4 sm:px-6 h-auto py-3 flex-col gap-1 text-white" onClick={() => window.open(PLAY_TESTING_URL, '_blank', 'noopener')}>
               <Play className="w-6 h-6 mb-1" />
               <div className="flex flex-col items-center leading-tight">
                 <span className="text-[10px] sm:text-xs text-white/80">{t('faq.cta.btnGooglePlayPrefix')}</span>
