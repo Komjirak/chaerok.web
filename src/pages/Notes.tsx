@@ -4,16 +4,22 @@ import { Link } from 'react-router-dom';
 import { collection, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
 import {
   AlertTriangle,
+  Check,
   CloudOff,
+  Copy,
   Folder,
+  Languages,
   LogOut,
   Search,
+  Share2,
   Sparkles,
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useChaerokSession } from '@/hooks/useChaerokSession';
-import { cleanUrlForDisplay, db, relativeDate, type RemoteNote } from '@/lib/chaerok';
+import { auth, cleanUrlForDisplay, db, relativeDate, type RemoteNote } from '@/lib/chaerok';
+import { buildNoteShareText, detectLang, translateNote } from '@/lib/noteActions';
+import { trackEvent } from '@/lib/track';
 import logoImg from '@/assets/logo.png';
 
 /**
@@ -426,6 +432,73 @@ function Detail({
   isEn: boolean;
   onClose: () => void;
 }) {
+  /*
+    원문 번역·복사·공유 (앱 1.0.1 검토 2·4장 — 웹 우선 도입, PO 결정 08-13).
+    번역 결과는 화면 상태로만 든다 — 저장하면 스키마·동기화 표면이 늘어난다.
+    수요는 note_translate/note_share 이벤트로 본다.
+  */
+  const [translation, setTranslation] = useState<string | null>(null);
+  const [translating, setTranslating] = useState(false);
+  const [translateError, setTranslateError] = useState<string | null>(null);
+  const [copied, setCopied] = useState<'original' | 'translation' | 'share' | null>(null);
+
+  // 사이트 언어가 곧 번역 목표다 — 웹에는 앱의 '기본 기록 언어' 설정이 없다
+  const siteLang = isEn ? ('en' as const) : ('ko' as const);
+  const rawLang = detectLang(note.rawContent ?? '');
+  const canTranslate = rawLang !== 'unknown' && rawLang !== siteLang;
+
+  const copy = async (key: 'original' | 'translation' | 'share', text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(key);
+      setTimeout(() => setCopied((prev) => (prev === key ? null : prev)), 1500);
+    } catch {
+      // 클립보드 권한 거부 — 조용히 넘긴다 (버튼 라벨이 안 바뀌는 것이 곧 피드백)
+    }
+  };
+
+  const runTranslate = async () => {
+    if (translating) return;
+    const user = auth().currentUser;
+    if (!user) return;
+    setTranslating(true);
+    setTranslateError(null);
+    const result = await translateNote(note.rawContent, siteLang, await user.getIdToken());
+    setTranslating(false);
+    if (result.text) {
+      setTranslation(result.text);
+      trackEvent('note_translate');
+    } else {
+      setTranslateError(
+        result.message ??
+          (isEn
+            ? "Couldn't translate right now. Try again in a moment."
+            : '지금은 번역하지 못했어요. 잠시 뒤 다시 시도해 주세요.'),
+      );
+    }
+  };
+
+  /*
+    공유 — 모바일 브라우저는 시스템 공유 시트(navigator.share), 데스크톱은
+    클립보드 복사로 대신한다(공유 API가 없는 환경이 아직 많다). 본문 조립은
+    앱과 같은 규칙(noteActions.buildNoteShareText)이라 어느 쪽에서 공유해도
+    같은 글이 나간다.
+  */
+  const share = async () => {
+    const text = buildNoteShareText(note, isEn);
+    trackEvent('note_share');
+    if (navigator.share) {
+      try {
+        await navigator.share({ text });
+        return;
+      } catch {
+        // 사용자가 시트를 닫은 것 — 복사 폴백으로 넘어가지 않는다
+        return;
+      }
+    }
+    await copy('share', text);
+  };
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -443,13 +516,32 @@ function Detail({
       <div className="absolute inset-0 bg-ink-dark/35" onClick={onClose} />
       <div className="absolute inset-y-0 right-0 w-full sm:w-[560px] bg-surface-paper border-l border-surface-amber overflow-y-auto">
         <div className="px-6 py-6 pb-24">
-          <button
-            onClick={onClose}
-            aria-label={isEn ? 'Close' : '닫기'}
-            className="float-right p-1.5 rounded-lg text-ink-muted hover:text-ink-dark hover:bg-surface-amber/60 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="float-right flex items-center gap-1">
+            {/* 공유 — 채록하기의 반대 방향. 데스크톱은 본문 복사로 동작한다 */}
+            <button
+              onClick={() => void share()}
+              title={
+                copied === 'share'
+                  ? isEn
+                    ? 'Copied'
+                    : '복사했어요'
+                  : isEn
+                    ? 'Share this note'
+                    : '기록 공유하기'
+              }
+              aria-label={isEn ? 'Share this note' : '기록 공유하기'}
+              className="p-1.5 rounded-lg text-ink-muted hover:text-ink-dark hover:bg-surface-amber/60 transition-colors"
+            >
+              {copied === 'share' ? <Check className="w-5 h-5" /> : <Share2 className="w-5 h-5" />}
+            </button>
+            <button
+              onClick={onClose}
+              aria-label={isEn ? 'Close' : '닫기'}
+              className="p-1.5 rounded-lg text-ink-muted hover:text-ink-dark hover:bg-surface-amber/60 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
           <h2 className="font-serif text-2xl leading-snug pr-10 mb-2">
             {note.title || (isEn ? 'Untitled' : '제목 없음')}
@@ -522,6 +614,70 @@ function Detail({
               <p className="text-sm text-ink-muted whitespace-pre-wrap bg-surface-amber/30 rounded-xl px-4 py-3.5 max-h-80 overflow-y-auto leading-relaxed">
                 {note.rawContent}
               </p>
+
+              {/* 원문 아래 행동 두 개 — 요약은 사이트 언어인데 원문이 다른 언어로
+                  남는 지점에서 바로 쓸 것: 옮겨 붙이기(복사)와 전체 번역 */}
+              <div className="flex flex-wrap items-center gap-2 mt-2.5">
+                {canTranslate && !translation ? (
+                  <button
+                    onClick={() => void runTranslate()}
+                    disabled={translating}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-surface-amber text-chaerok-800 hover:border-chaerok-400 transition-colors disabled:opacity-60"
+                  >
+                    <Languages className="w-3.5 h-3.5" />
+                    {translating
+                      ? isEn
+                        ? 'Translating…'
+                        : '번역하고 있어요…'
+                      : isEn
+                        ? 'Translate'
+                        : '번역하기'}
+                  </button>
+                ) : null}
+                <button
+                  onClick={() => void copy('original', note.rawContent)}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-surface-amber text-ink-muted hover:border-chaerok-400 transition-colors"
+                >
+                  {copied === 'original' ? (
+                    <Check className="w-3.5 h-3.5" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
+                  {copied === 'original' ? (isEn ? 'Copied' : '복사했어요') : isEn ? 'Copy' : '복사하기'}
+                </button>
+              </div>
+
+              {translateError ? (
+                <p className="mt-2 text-xs text-chaerok-800">{translateError}</p>
+              ) : null}
+
+              {translation ? (
+                <div className="mt-3 bg-surface-white border border-surface-amber/70 rounded-xl px-4 py-3.5">
+                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted mb-2">
+                    {isEn ? 'Translation' : '번역'}
+                  </h4>
+                  <p className="text-sm whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto">
+                    {translation}
+                  </p>
+                  <button
+                    onClick={() => void copy('translation', translation)}
+                    className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-surface-amber text-ink-muted hover:border-chaerok-400 transition-colors"
+                  >
+                    {copied === 'translation' ? (
+                      <Check className="w-3.5 h-3.5" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                    {copied === 'translation'
+                      ? isEn
+                        ? 'Copied'
+                        : '복사했어요'
+                      : isEn
+                        ? 'Copy'
+                        : '복사하기'}
+                  </button>
+                </div>
+              ) : null}
             </Block>
           ) : null}
         </div>

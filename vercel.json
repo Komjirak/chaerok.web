@@ -6,6 +6,10 @@
       "destination": "https://us-central1-chaerok-c0830.cloudfunctions.net/analyze"
     },
     {
+      "source": "/api/answer",
+      "destination": "https://us-central1-chaerok-c0830.cloudfunctions.net/answer"
+    },
+    {
       "source": "/admin",
       "destination": "https://chaerok-c0830.web.app/"
     },
