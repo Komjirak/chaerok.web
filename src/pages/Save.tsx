@@ -217,29 +217,39 @@ export function Save() {
           </Msg>
         ) : locked ? (
           /*
-            로그인은 성공했지만 Pro가 아닌 경우 — 여기서 끝이 아니라 다음 할 일
-            (앱에서 시작)을 안내한다. 구독은 웹이 아니라 모바일 앱 안에서만
-            시작할 수 있으므로 QR로 이어준다.
+            서버가 거절했을 때의 화면 — 다음 할 일(앱에서 체험 시작)을 안내한다.
+            구독은 웹이 아니라 모바일 앱 안에서만 시작할 수 있어 QR로 이어준다.
 
-            ⚠️ **체험을 먼저 말한다 (08-15).** 예전에는 "채록 Pro의 기능이에요"
-            + "앱 받아서 구독하세요"뿐이라, 사용자에게 **지금 당장 돈을 내라는
-            요구**로 읽혔다. 2주 무료 체험은 진작부터 있었는데 데스크톱
-            진입 지점 어디에도 그 말이 없었다 — 화면이 아니라 문장이 빠져
-            있었던 것이다. 잠금은 그대로 두고 초대만 붙인다.
+            ⚠️ **제목이 도달 경로를 따라야 한다 (PO 지적 08-15).** 예전에는
+            "로그인 완료 — …"였는데, 그건 **로그인 직후에만 이 화면에 닿던
+            시절의 말**이다. 지금은 무료 다섯 번을 다 쓴 사람이 오므로, 이미
+            로그인해 쓰고 있던 사람에게 "로그인 완료"라고 하는 셈이었다.
+            바로 아래 "…계정으로 로그인돼 있어요" 줄과도 겹친다.
+
+            ⚠️ **Pro 사용자도 여기 올 수 있다.** 예산 상한(hard cap)에 걸리면
+            서버가 같은 402를 준다 — 거의 없는 일이지만, 그 사람에게 "체험을
+            다 쓰셨어요"는 틀린 말이고 QR로 구독을 권하는 것은 더 틀렸다.
+            그래서 등급으로 갈라, Pro에게는 **서버가 준 문구를 그대로** 보인다.
           */
           <div className="text-center py-4">
             <div className="w-11 h-11 mx-auto mb-3.5 rounded-xl bg-surface-amber/60 grid place-items-center text-ink-muted">
               <Lock className="w-5 h-5" />
             </div>
             <h2 className="text-lg font-serif mb-2">
-              {isEn
-                ? 'Signed in — start free for 2 weeks'
-                : '로그인 완료 — 2주 무료로 시작할 수 있어요'}
+              {tier === 'pro'
+                ? isEn
+                  ? 'Not right now'
+                  : '지금은 정리해 드릴 수 없어요'
+                : isEn
+                  ? "That's the five free ones"
+                  : '무료로 드린 다섯 번을 다 쓰셨어요'}
             </h2>
             <p className="text-sm text-ink-muted max-w-xs mx-auto leading-relaxed mb-2">
-              {isEn
-                ? 'Saving from the web and picking it up on your phone comes with Chaerok Pro. Start the 2-week free trial in the Chaerok app and you can use it right away — nothing is charged during the trial, and you can cancel anytime.'
-                : '웹에서 담은 기록을 계정에 보관하고 모바일에서 이어 보는 건 채록 Pro의 기능이에요. 채록 앱에서 2주 무료 체험을 시작하면 바로 쓸 수 있어요 — 체험 기간에는 요금이 청구되지 않고, 언제든 해지할 수 있어요.'}
+              {tier === 'pro'
+                ? why
+                : isEn
+                  ? 'To keep saving, start the 2-week free trial in the Chaerok app. Nothing is charged during the trial, and you can cancel anytime.'
+                  : '계속 담으시려면 채록 앱에서 2주 무료 체험을 시작해 주세요. 체험 기간에는 요금이 청구되지 않고, 언제든 해지할 수 있어요.'}
             </p>
             {user.email ? (
               <p className="text-xs text-ink-muted/80 mb-5 break-all">
@@ -247,29 +257,34 @@ export function Save() {
               </p>
             ) : null}
 
-            <div className="bg-surface-white border border-surface-amber rounded-xl px-4 py-4 mb-5 text-left flex items-center gap-4">
-              <img
-                src={appQr}
-                alt={isEn ? 'QR code to the Chaerok app page' : '채록 앱 안내 QR 코드'}
-                className="w-24 h-24 rounded-lg border border-surface-amber/60 shrink-0"
-              />
-              <div className="min-w-0">
-                <p className="text-sm font-medium mb-1">
-                  {isEn ? 'Start free in the Chaerok app' : '무료 체험은 채록 앱에서 시작해요'}
-                </p>
-                <p className="text-xs text-ink-muted leading-relaxed">
-                  {isEn
-                    ? 'Scan with your phone camera to get the app, then start the 2-week free trial in Settings → Chaerok Pro. Come back here with the same account.'
-                    : '휴대폰 카메라로 QR을 찍어 앱을 받고, 설정 → 채록 Pro에서 2주 무료 체험을 시작하세요. 같은 계정으로 다시 오면 바로 담을 수 있어요.'}
-                </p>
-              </div>
-            </div>
+            {/* 이미 Pro인 사람에게 QR과 요금제를 보이면 안 된다 — 이미 산 것을 또 권하는 꼴이다 */}
+            {tier !== 'pro' ? (
+              <>
+                <div className="bg-surface-white border border-surface-amber rounded-xl px-4 py-4 mb-5 text-left flex items-center gap-4">
+                  <img
+                    src={appQr}
+                    alt={isEn ? 'QR code to the Chaerok app page' : '채록 앱 안내 QR 코드'}
+                    className="w-24 h-24 rounded-lg border border-surface-amber/60 shrink-0"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium mb-1">
+                      {isEn ? 'Start free in the Chaerok app' : '무료 체험은 채록 앱에서 시작해요'}
+                    </p>
+                    <p className="text-xs text-ink-muted leading-relaxed">
+                      {isEn
+                        ? 'Scan with your phone camera to get the app, then start the 2-week free trial in Settings → Chaerok Pro. Come back here with the same account.'
+                        : '휴대폰 카메라로 QR을 찍어 앱을 받고, 설정 → 채록 Pro에서 2주 무료 체험을 시작하세요. 같은 계정으로 다시 오면 바로 담을 수 있어요.'}
+                    </p>
+                  </div>
+                </div>
 
-            <a href="/#pricing" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" className="w-full mb-2.5">
-                {isEn ? 'See plans' : '요금제 보기'}
-              </Button>
-            </a>
+                <a href="/#pricing" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" className="w-full mb-2.5">
+                    {isEn ? 'See plans' : '요금제 보기'}
+                  </Button>
+                </a>
+              </>
+            ) : null}
             <button
               type="button"
               onClick={signOutNow}
