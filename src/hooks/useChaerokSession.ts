@@ -21,6 +21,8 @@ import { auth, db, type Tier } from '@/lib/chaerok';
 export interface ChaerokSession {
   user: User | null;
   tier: Tier;
+  /** 예전에 구독한 적이 있는 계정 — 스토어 체험은 계정당 한 번뿐이다 */
+  subscribedBefore: boolean;
   /** 처음 인증 상태를 확인하기 전 — 로그인 화면을 깜빡이지 않게 한다 */
   loading: boolean;
   signIn: () => Promise<void>;
@@ -32,6 +34,8 @@ export interface ChaerokSession {
 export function useChaerokSession(isEn: boolean): ChaerokSession {
   const [user, setUser] = useState<User | null>(null);
   const [tier, setTier] = useState<Tier>('free');
+  /** 결제 웹훅이 이 계정에 쓴 적이 있는가 — 무료 체험 문구를 쓸지 가른다 */
+  const [subscribedBefore, setSubscribedBefore] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   // 등급은 로그인 확인 뒤 Firestore에서 따로 읽는다. 이 조회가 끝나기 전에
   // 화면을 그리면 기본값 'free'가 잠깐 보인다 — Pro 사용자에게 무료 안내
@@ -51,6 +55,7 @@ export function useChaerokSession(isEn: boolean): ChaerokSession {
       }
       if (!u) {
         setTier('free');
+        setSubscribedBefore(false);
         return;
       }
       try {
@@ -58,8 +63,26 @@ export function useChaerokSession(isEn: boolean): ChaerokSession {
         const raw = snap.exists() ? snap.get('tier') : null;
         // 'mind'는 등급 이름을 'pro'로 바꾸기 전에 부여된 계정 — 받아준다 (앱 remoteTier.ts와 같은 규칙)
         setTier(raw === 'pro' || raw === 'mind' ? 'pro' : 'free');
+        /*
+          **구독 이력이 있는가.** 스토어는 무료 체험을 계정당 한 번만 주므로,
+          구독했다 해지한 사람에게 "2주 무료 체험을 시작하세요"라고 하면
+          거짓말이 된다(PO 지적 08-15).
+
+          두 필드 중 하나라도 있으면 결제 웹훅이 이 계정에 무언가 쓴 적이
+          있다는 뜻이다 — `tierEventAt`은 등급을 쓸 때마다(해지 포함),
+          `lastPeriodType`은 체험·정상·프로모 구분을 저장한다.
+
+          ⚠️ 두 필드 모두 **08-11·08-14 배포 이후 도착한 웹훅부터** 쌓인다.
+          그 전에 해지한 계정은 이력이 없는 것으로 보여 체험 문구를 받는다 —
+          모르는 것을 아는 척하지 않는 쪽이고, 틀려도 스토어가 실제 자격으로
+          막아 준다(우리 문구가 앞서 나갈 뿐이다).
+        */
+        setSubscribedBefore(
+          snap.exists() && (snap.get('tierEventAt') != null || snap.get('lastPeriodType') != null),
+        );
       } catch {
         setTier('free');
+        setSubscribedBefore(false);
       } finally {
         setTierPending(false);
       }
@@ -134,5 +157,5 @@ export function useChaerokSession(isEn: boolean): ChaerokSession {
   // 로그인 확인 중이거나, 로그인된 사용자의 등급 조회가 아직이면 로딩으로 취급
   const loading = authLoading || (user !== null && tierPending);
 
-  return { user, tier, loading, signIn, signOutNow, error };
+  return { user, tier, subscribedBefore, loading, signIn, signOutNow, error };
 }

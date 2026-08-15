@@ -81,7 +81,8 @@ interface Analyzed {
 export function Save() {
   const { i18n } = useTranslation();
   const isEn = i18n.language === 'en';
-  const { user, tier, loading, signIn, signOutNow, error: authError } = useChaerokSession(isEn);
+  const { user, tier, subscribedBefore, loading, signIn, signOutNow, error: authError } =
+    useChaerokSession(isEn);
   // 게으른 초기화 — 첫 렌더에서 딱 한 번 쿼리를 읽고 주소창을 비운다
   const [page] = useState(readPayloadOnce);
 
@@ -245,11 +246,22 @@ export function Save() {
                   : '무료로 드린 다섯 번을 다 쓰셨어요'}
             </h2>
             <p className="text-sm text-ink-muted max-w-xs mx-auto leading-relaxed mb-2">
+              {/*
+                ⚠️ **체험은 계정당 한 번뿐이다 (PO 지적 08-15).** 구독했다
+                해지한 사람에게 "2주 무료 체험을 시작하세요"라고 하면 거짓말이
+                된다 — 스토어는 그 계정에 체험을 다시 주지 않는다. 결제 시트를
+                열면 바로 청구가 뜨므로 우리 문구만 앞서 나가는 꼴이다.
+                이력이 있으면 체험을 빼고 다시 구독하는 말로 바꾼다.
+              */}
               {tier === 'pro'
                 ? why
-                : isEn
-                  ? 'To keep saving, start the 2-week free trial in the Chaerok app. Nothing is charged during the trial, and you can cancel anytime.'
-                  : '계속 담으시려면 채록 앱에서 2주 무료 체험을 시작해 주세요. 체험 기간에는 요금이 청구되지 않고, 언제든 해지할 수 있어요.'}
+                : subscribedBefore
+                  ? isEn
+                    ? 'To keep saving, resubscribe to Chaerok Pro in the app. You can cancel anytime.'
+                    : '계속 담으시려면 채록 앱에서 채록 Pro를 다시 시작해 주세요. 언제든 해지할 수 있어요.'
+                  : isEn
+                    ? 'To keep saving, start the 2-week free trial in the Chaerok app. Nothing is charged during the trial, and you can cancel anytime.'
+                    : '계속 담으시려면 채록 앱에서 2주 무료 체험을 시작해 주세요. 체험 기간에는 요금이 청구되지 않고, 언제든 해지할 수 있어요.'}
             </p>
             {user.email ? (
               <p className="text-xs text-ink-muted/80 mb-5 break-all">
@@ -268,12 +280,22 @@ export function Save() {
                   />
                   <div className="min-w-0">
                     <p className="text-sm font-medium mb-1">
-                      {isEn ? 'Start free in the Chaerok app' : '무료 체험은 채록 앱에서 시작해요'}
+                      {subscribedBefore
+                        ? isEn
+                          ? 'Resubscribe in the Chaerok app'
+                          : '구독은 채록 앱에서 다시 시작해요'
+                        : isEn
+                          ? 'Start free in the Chaerok app'
+                          : '무료 체험은 채록 앱에서 시작해요'}
                     </p>
                     <p className="text-xs text-ink-muted leading-relaxed">
-                      {isEn
-                        ? 'Scan with your phone camera to get the app, then start the 2-week free trial in Settings → Chaerok Pro. Come back here with the same account.'
-                        : '휴대폰 카메라로 QR을 찍어 앱을 받고, 설정 → 채록 Pro에서 2주 무료 체험을 시작하세요. 같은 계정으로 다시 오면 바로 담을 수 있어요.'}
+                      {subscribedBefore
+                        ? isEn
+                          ? 'Open the Chaerok app and resubscribe in Settings → Chaerok Pro. Come back here with the same account.'
+                          : '채록 앱을 열고 설정 → 채록 Pro에서 다시 시작하세요. 같은 계정으로 다시 오면 바로 담을 수 있어요.'
+                        : isEn
+                          ? 'Scan with your phone camera to get the app, then start the 2-week free trial in Settings → Chaerok Pro. Come back here with the same account.'
+                          : '휴대폰 카메라로 QR을 찍어 앱을 받고, 설정 → 채록 Pro에서 2주 무료 체험을 시작하세요. 같은 계정으로 다시 오면 바로 담을 수 있어요.'}
                     </p>
                   </div>
                 </div>
