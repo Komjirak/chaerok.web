@@ -89,6 +89,15 @@ export function Save() {
   const [step, setStep] = useState<Step>('form');
   const [result, setResult] = useState<Analyzed | null>(null);
   const [why, setWhy] = useState('');
+  /**
+   * 정리는 못 했지만 기록은 담긴 경우 — 서버가 조용히 거절했을 때(402)다.
+   *
+   * 이 화면은 지금까지 그런 경우에 **아무것도 저장하지 않고 실패**로 끝냈다.
+   * 앱에서는 같은 상황에서 저장은 반드시 성공하고 품질만 낮아지는데
+   * (Fail Soft, Not Loud), 웹만 담은 것을 통째로 버리고 있었다 —
+   * 사용자 입장에서는 "담기 눌렀는데 사라졌다"이다.
+   */
+  const [savedUnorganized, setSavedUnorganized] = useState(false);
 
   useEffect(() => {
     document.title = isEn ? 'Save to Chaerok' : '채록에 담기';
@@ -124,18 +133,35 @@ export function Save() {
         body: JSON.stringify({ content: analyzeInput, sourceUrl: page.url || null, languageInstruction: '' }),
       });
 
-      // 402·403은 서버가 조용히 거절한 것 — 문구만 오고 수치는 오지 않는다
-      if (res.status === 402 || res.status === 403) {
+      /*
+        402·403은 서버가 조용히 거절한 것 — 문구만 오고 수치는 오지 않는다.
+
+        **403(등급)과 402(예산 상한)의 처리가 다르다.**
+        - 403은 여기까지 오지 않는 것이 정상이다. Pro가 아니면 아래 렌더가
+          분석을 부르기 전에 안내 화면으로 막는다. 그래도 오면 실패로 끝낸다 —
+          쓰기 권한이 없어 저장을 시도해 봐야 규칙에 막힌다.
+        - 402는 **Pro인데 이번 달 상한에 닿은 것**이다. 쓰기 권한은 있으므로
+          정리만 못 할 뿐 담기는 성공해야 한다(앱과 같은 Fail Soft).
+      */
+      if (res.status === 403) {
         const body = (await res.json().catch(() => ({}))) as { userMessage?: string };
         setWhy(body.userMessage ?? (isEn ? "We can't organize this right now." : '지금은 정리해 드릴 수 없어요.'));
         return setStep('fail');
+      }
+      const overBudget = res.status === 402;
+      if (overBudget) {
+        const body = (await res.json().catch(() => ({}))) as { userMessage?: string };
+        setWhy(body.userMessage ?? (isEn ? 'Saved without sorting.' : '정리 없이 담아두었어요.'));
       }
       if (!res.ok) {
         setWhy(isEn ? "Chaerok couldn't read the page." : '채록이가 내용을 정리하지 못했어요.');
         return setStep('fail');
       }
 
-      const r = (await res.json()) as Partial<Analyzed> & { tags?: NoteTag[] };
+      // 상한에 걸렸으면 응답 본문이 없다 — 페이지 제목만으로 기록을 세운다
+      const r = overBudget
+        ? ({} as Partial<Analyzed> & { tags?: NoteTag[] })
+        : ((await res.json()) as Partial<Analyzed> & { tags?: NoteTag[] });
       const now = Date.now();
       const id = crypto.randomUUID();
       const analyzed: Analyzed = {
@@ -161,11 +187,14 @@ export function Save() {
         summary: analyzed.summary,
         folderName: analyzed.folder,
         tags: analyzed.tags,
-        processedByLayer: 'L2',
-        processedByModel: 'chaerok-cloud',
+        // 정리를 못 했으면 그 사실을 기록에도 남긴다 — 앱 상세에서 왜 요약이
+        // 비었는지 읽을 수 있어야 한다
+        processedByLayer: overBudget ? 'L1' : 'L2',
+        processedByModel: overBudget ? 'web-raw' : 'chaerok-cloud',
       });
 
       setResult(analyzed);
+      setSavedUnorganized(overBudget);
       setStep('done');
       trackEvent('save_done', 'ext');
     } catch {
@@ -314,6 +343,14 @@ export function Save() {
               <h2 className="text-lg font-serif">
                 {isEn ? 'Saved to your notes' : '생각 노트에 담았어요'}
               </h2>
+              {/*
+                정리까지는 못 한 경우 — 담긴 것은 담긴 것이라 성공 화면을 쓰되,
+                왜 요약이 비어 있는지 한 줄로 말한다. 서버가 준 문구를 그대로
+                쓰므로 수치는 실리지 않는다(Silent Metering).
+              */}
+              {savedUnorganized && why ? (
+                <p className="mt-2 text-sm text-ink-muted max-w-xs mx-auto leading-relaxed">{why}</p>
+              ) : null}
             </div>
             <h3 className="font-serif text-xl leading-snug mb-2">{result.title}</h3>
             {result.summary ? (
