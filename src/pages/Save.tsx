@@ -89,6 +89,12 @@ export function Save() {
   const [step, setStep] = useState<Step>('form');
   const [result, setResult] = useState<Analyzed | null>(null);
   const [why, setWhy] = useState('');
+  /*
+    서버가 등급으로 거절했을 때만 켠다 — 화면이 미리 판단하지 않는다.
+    무료 계정도 평생 체험분이 남아 있으면 그대로 담기므로, 눌러 보기 전에는
+    잠겼는지 알 수 없다(그리고 남은 횟수는 어디에도 보여주지 않는다).
+  */
+  const [locked, setLocked] = useState(false);
 
   useEffect(() => {
     document.title = isEn ? 'Save to Chaerok' : '채록에 담기';
@@ -124,11 +130,20 @@ export function Save() {
         body: JSON.stringify({ content: analyzeInput, sourceUrl: page.url || null, languageInstruction: '' }),
       });
 
-      // 402·403은 서버가 조용히 거절한 것 — 문구만 오고 수치는 오지 않는다
+      /*
+        402·403은 서버가 조용히 거절한 것 — 문구만 오고 수치는 오지 않는다.
+
+        **여기가 유일한 잠금 판정이다(08-15).** 예전에는 화면이 `tier !== 'pro'`로
+        미리 막아, 무료 계정은 담기 버튼을 눌러 볼 수조차 없었다. 그러면
+        서버가 여는 평생 체험분에 영영 닿지 못한다 — 강제는 서버 한 곳이라는
+        원칙(server/src/entitlement.ts 머리주석)을 화면이 앞질러 어긴 셈이었다.
+        이제 눌러 보고, 서버가 거절할 때만 잠금 화면으로 간다.
+      */
       if (res.status === 402 || res.status === 403) {
         const body = (await res.json().catch(() => ({}))) as { userMessage?: string };
         setWhy(body.userMessage ?? (isEn ? "We can't organize this right now." : '지금은 정리해 드릴 수 없어요.'));
-        return setStep('fail');
+        setLocked(true);
+        return;
       }
       if (!res.ok) {
         setWhy(isEn ? "Chaerok couldn't read the page." : '채록이가 내용을 정리하지 못했어요.');
@@ -200,7 +215,7 @@ export function Save() {
             </Button>
             {authError ? <p className="mt-3 text-sm text-chaerok-800">{authError}</p> : null}
           </Msg>
-        ) : tier !== 'pro' ? (
+        ) : locked ? (
           /*
             로그인은 성공했지만 Pro가 아닌 경우 — 여기서 끝이 아니라 다음 할 일
             (앱에서 시작)을 안내한다. 구독은 웹이 아니라 모바일 앱 안에서만
