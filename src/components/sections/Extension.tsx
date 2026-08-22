@@ -1,161 +1,107 @@
-import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Check, Download, MousePointerClick, NotebookPen, Puzzle } from 'lucide-react';
+import { Check, MonitorSmartphone, Puzzle, Smartphone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import { useExtension } from '@/hooks/useExtension';
+import { CHROME_STORE_URL } from '@/lib/storeLinks';
+import { trackEvent } from '@/lib/track';
+import { useDevice, openAppStore } from '@/lib/appDownload';
 
 /**
- * 크롬 익스텐션 안내 + 원터치 설치 버튼.
+ * 모든 입구 — 앱을 중심에 둔 3타일(앱 / 크롬 익스텐션 / 웹 생각 노트).
  *
- * 2026-08-05 웹스토어 승인 — 이 주소가 채워진 순간부터 버튼이 스토어 설치
- * 한 번 누르기로 바뀐다. 아래 zip 경로는 스토어가 응답하지 않을 때를 위한
- * 폴백으로 남겨둔다(주소를 비우면 그 흐름으로 되돌아간다).
- *
- * utm은 붙이지 않는다 — 스토어가 「링크 복사」에 얹어주는 값이라 우리 유입
- * 분석에 쓰이지도 않고, 주소만 길어진다.
+ * 예전 판은 익스텐션 단독 대공세가 페이지 세 번째 자리를 차지해 데스크톱
+ * 방문자를 앱이 아닌 익스텐션으로 분산시켰다. 익스텐션은 리텐션 부스터지
+ * 획득 도구가 아니라, 요금제 뒤로 내리고 생태계 절로 눌러 담는다.
+ * #extension 앵커는 유지(웹스토어 심사·외부 링크가 이 주소를 안다).
  */
-const CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/pnndjhdcffpjmekjiknakoakablpocli';
-
-const EXTENSION_ZIP = '/chaerok-extension.zip';
-
 export function Extension() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const device = useDevice();
   const { installed } = useExtension();
-  const [showSteps, setShowSteps] = useState(false);
-
-  const onStore = !!CHROME_STORE_URL;
-
-  const install = () => {
-    if (onStore) {
-      window.open(CHROME_STORE_URL, '_blank', 'noopener,noreferrer');
-      return;
-    }
-    // 내려받기와 설치 안내를 함께 띄운다. 받아만 두고 무엇을 해야 할지
-    // 모르는 것이 이 방식의 유일한 함정이라 그 자리에서 말해준다.
-    const a = document.createElement('a');
-    a.href = EXTENSION_ZIP;
-    a.download = 'chaerok-extension.zip';
-    a.click();
-    setShowSteps(true);
-  };
 
   return (
     <section id="extension" className="py-16 md:py-20 bg-surface-amber/30">
       <div className="max-w-[1200px] mx-auto px-5 lg:px-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <h2 className="text-3xl md:text-4xl font-serif mb-6 leading-tight">
+            {t('extension.title1')}<br className="md:hidden" /> {t('extension.title2')}
+          </h2>
+          <p className="text-lg text-ink-muted leading-relaxed">
+            {t('extension.desc')}
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6 items-stretch">
+          {/* 앱 — 중심 타일. 채워진 버튼은 이 절에서 이것 하나 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="text-center lg:text-left"
+            transition={{ duration: 0.4 }}
+            className="rounded-2xl bg-white border-2 border-chaerok-600 shadow-ambient p-7 flex flex-col"
           >
-            <div className="inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-surface-paper text-chaerok-800 text-sm font-medium mb-6">
-              <Puzzle className="w-4 h-4" strokeWidth={1.5} />
-              {t('extension.badge')}
+            <div className="w-11 h-11 rounded-xl bg-chaerok-100 text-chaerok-600 flex items-center justify-center mb-5">
+              <Smartphone className="w-5 h-5" strokeWidth={1.5} />
             </div>
+            <h3 className="font-medium text-lg mb-2">{t('extension.app.title')}</h3>
+            <p className="text-sm text-ink-muted leading-relaxed mb-6 flex-1">{t('extension.app.desc')}</p>
+            <Button className="w-full" onClick={() => openAppStore('dl_everywhere', device)}>
+              {t('extension.app.cta')}
+            </Button>
+          </motion.div>
 
-            <h2 className="text-3xl md:text-4xl font-serif mb-6 leading-tight">
-              {t('extension.title1')}<br className="md:hidden" /> {t('extension.title2')}
-            </h2>
-            <p className="text-lg text-ink-muted leading-relaxed mb-10">
-              {t('extension.desc')}
-            </p>
-
+          {/* 크롬 익스텐션 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="rounded-2xl bg-surface-paper border border-surface-amber p-7 flex flex-col"
+          >
+            <div className="w-11 h-11 rounded-xl bg-chaerok-100 text-chaerok-600 flex items-center justify-center mb-5">
+              <Puzzle className="w-5 h-5" strokeWidth={1.5} />
+            </div>
+            <h3 className="font-medium text-lg mb-2">{t('extension.ext.title')}</h3>
+            <p className="text-sm text-ink-muted leading-relaxed mb-6 flex-1">{t('extension.ext.desc')}</p>
             {installed ? (
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="inline-flex items-center gap-2 h-14 px-6 rounded-xl bg-surface-paper text-chaerok-800 font-medium">
-                  <Check className="w-5 h-5" strokeWidth={2} />
-                  {t('extension.installed')}
-                </div>
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  onClick={() => window.location.assign('/notes')}
-                >
-                  {t('extension.openNotes')}
-                </Button>
+              <div className="inline-flex items-center justify-center gap-2 h-11 rounded-lg bg-white text-chaerok-800 font-medium text-sm">
+                <Check className="w-4 h-4" strokeWidth={2} />
+                {t('extension.ext.installed')}
               </div>
             ) : (
-              <div className="flex flex-wrap items-center gap-4">
-                <Button size="lg" className="gap-2" onClick={install}>
-                  {onStore ? (
-                    <Puzzle className="w-5 h-5" strokeWidth={1.5} />
-                  ) : (
-                    <Download className="w-5 h-5" strokeWidth={1.5} />
-                  )}
-                  {onStore ? t('extension.btnStore') : t('extension.btnDownload')}
-                </Button>
-                {!onStore && (
-                  <button
-                    type="button"
-                    onClick={() => setShowSteps((v) => !v)}
-                    className="text-ink-muted hover:text-chaerok-600 text-sm underline underline-offset-4 transition-colors"
-                  >
-                    {t('extension.howTo')}
-                  </button>
-                )}
-              </div>
-            )}
-
-            {!installed && showSteps && (
-              <motion.ol
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                className="mt-8 space-y-3 text-sm text-ink-muted list-none"
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => { trackEvent('go_ext'); window.open(CHROME_STORE_URL, '_blank', 'noopener,noreferrer'); }}
               >
-                {[t('extension.step1'), t('extension.step2'), t('extension.step3')].map(
-                  (step, i) => (
-                    <li key={i} className="flex gap-3">
-                      <span className="shrink-0 w-6 h-6 rounded-full bg-surface-paper text-chaerok-600 flex items-center justify-center text-xs font-medium">
-                        {i + 1}
-                      </span>
-                      <span className="leading-relaxed pt-0.5">{step}</span>
-                    </li>
-                  ),
-                )}
-              </motion.ol>
+                {t('extension.ext.cta')}
+              </Button>
             )}
           </motion.div>
 
+          {/* 웹 생각 노트 */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="space-y-4"
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="rounded-2xl bg-surface-paper border border-surface-amber p-7 flex flex-col"
           >
-            {[
-              {
-                icon: MousePointerClick,
-                title: t('extension.f1.title'),
-                desc: t('extension.f1.desc'),
-              },
-              {
-                icon: NotebookPen,
-                title: t('extension.f2.title'),
-                desc: t('extension.f2.desc'),
-              },
-              {
-                icon: Check,
-                title: t('extension.f3.title'),
-                desc: t('extension.f3.desc'),
-              },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className="flex gap-5 p-6 rounded-2xl bg-surface-paper border border-surface-amber"
-              >
-                <div className="shrink-0 w-11 h-11 rounded-xl bg-chaerok-100 text-chaerok-600 flex items-center justify-center">
-                  <item.icon className="w-5 h-5" strokeWidth={1.5} />
-                </div>
-                <div>
-                  <div className="font-medium text-ink-dark mb-1">{item.title}</div>
-                  <div className="text-sm text-ink-muted leading-relaxed">{item.desc}</div>
-                </div>
-              </div>
-            ))}
+            <div className="w-11 h-11 rounded-xl bg-chaerok-100 text-chaerok-600 flex items-center justify-center mb-5">
+              <MonitorSmartphone className="w-5 h-5" strokeWidth={1.5} />
+            </div>
+            <h3 className="font-medium text-lg mb-2">{t('extension.web.title')}</h3>
+            <p className="text-sm text-ink-muted leading-relaxed mb-6 flex-1">{t('extension.web.desc')}</p>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => { trackEvent('go_webapp'); navigate('/notes'); }}
+            >
+              {t('extension.web.cta')}
+            </Button>
           </motion.div>
         </div>
       </div>

@@ -1,11 +1,19 @@
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/Button';
+import { useDevice, openAppStore } from '@/lib/appDownload';
 
+/**
+ * 요금제 — 가격 앵커("하루 163원", 피치덱 05P)와 스토어 CTA.
+ *
+ * 예전 판의 결정적 문제: Free·Pro 카드의 버튼이 둘 다 /notes(읽기 전용 웹
+ * 뷰어)로 갔다. 무료 기능은 전부 앱 안에 있고 결제도 앱 안에서만 되므로,
+ * 두 버튼 다 방문 기기의 스토어로 보낸다(dl_pricing_free / dl_pricing_pro).
+ */
 export function Pricing() {
   const { t } = useTranslation();
+  const device = useDevice();
 
   const freeFeatures = t('pricing.free.features', { returnObjects: true }) as string[];
   const proFeatures = t('pricing.pro.features', { returnObjects: true }) as string[];
@@ -49,7 +57,9 @@ export function Pricing() {
                 </li>
               ))}
             </ul>
-            <Link to="/notes" className="w-full"><Button variant="outline" className="w-full">{t('pricing.free.cta')}</Button></Link>
+            <Button variant="outline" className="w-full" onClick={() => openAppStore('dl_pricing_free', device)}>
+              {t('pricing.free.cta')}
+            </Button>
           </motion.div>
 
           {/* Pro Plan */}
@@ -69,9 +79,11 @@ export function Pricing() {
             <div className="inline-block text-xs font-medium text-chaerok-800 bg-surface-amber/30 rounded-md px-2 py-1 mb-6 self-start">
               {t('pricing.pro.support')}
             </div>
-            <div className="mb-8">
+            <div className="mb-8 flex items-baseline gap-2">
               <span className="text-4xl font-serif font-medium">{t('pricing.pro.price')}</span>
-              <span className="text-ink-muted ml-1">{t('pricing.pro.period')}</span>
+              <span className="text-ink-muted">{t('pricing.pro.period')}</span>
+              {/* 가격 앵커 — 월 4,900원을 하루 단위로 되읽어 준다 */}
+              <span className="text-sm text-chaerok-600 font-medium">{t('pricing.pro.perDay')}</span>
             </div>
             <ul className="space-y-3 mb-8 flex-1">
               {proFeatures.map((feature, idx) => (
@@ -81,7 +93,9 @@ export function Pricing() {
                 </li>
               ))}
             </ul>
-            <Link to="/notes" className="w-full"><Button className="w-full">{t('pricing.pro.cta')}</Button></Link>
+            <Button className="w-full" onClick={() => openAppStore('dl_pricing_pro', device)}>
+              {t('pricing.pro.cta')}
+            </Button>
           </motion.div>
         </div>
 

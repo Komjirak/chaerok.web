@@ -43,12 +43,15 @@ function Home() {
 
   return (
     <main className="flex-1">
+      {/* 전환 서사 순서 — 약속(히어로) → 작동 방식 → 돌려주는 뇌 → 신뢰(프라이버시)
+          → 제안(요금제) → 생태계(모든 입구) → 반대 처리(FAQ). 익스텐션은 획득이
+          아니라 리텐션 표면이라 요금제 뒤로 내렸다(docs/hero-redesign, 앱 저장소). */}
       <Hero />
       <Features />
       <Ontology />
-      <Extension />
       <Privacy />
       <Pricing />
+      <Extension />
       <FAQ />
     </main>
   );

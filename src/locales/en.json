@@ -12,171 +12,170 @@
     "try": "Start for Free"
   },
   "hero": {
-    "badge": "Toss it in — Chaerok does the rest",
-    "title1": "Your Second Brain,",
-    "title2": "Chaerok",
-    "desc": "Toss in a thought, a link, or a photo. Chaerok's cloud AI reads long articles in full, summarizes, tags, and connects them — then brings them back in morning briefings and a weekly report. Every Pro feature is free for your first two weeks.",
-    "btnStart": "Start for Free",
-    "btnHow": "See How It Works",
-    "platformLabel": "Available Platforms",
-    "floatingTitle": "Chaerok Summarized It",
-    "floatingDesc": "Chaerok (採錄): To search for and gather necessary words or writings. Turn your scattered thoughts into wisdom.",
-    "iosNote": "Now available",
-    "androidNote": "Closed beta",
-    "mock": {
-      "userMsg": "A red full moon over the Seoul night sky",
-      "userPhoto": "(shared a photo)",
-      "agentMsg": "I can see it too — that red moon really stands out against the night sky.",
-      "agentFolder": "I filed it in your `Daily/Thoughts` folder.",
-      "noteTitle": "A red full moon over the Seoul night sky…",
-      "noteFolder": "Daily/Thoughts",
-      "tag1": "#fullmoon",
-      "tag2": "#nightsky",
-      "input": "Toss a thought here"
-    },
-    "chromeNote": "Web Store"
+    "badge": "Live on the App Store · First 2 weeks of Pro free",
+    "title1": "Toss it in — done,",
+    "title2": "Chaerok handles the rest",
+    "desc": "Your second brain, Chaerok. Toss in thoughts, links, and photos as they come. Chaerok summarizes, tags, and connects them — then brings them back in morning briefings and a weekly report.",
+    "chip1": "Zero organizing",
+    "chip2": "Saving never fails",
+    "chip3": "Notes stay on your phone",
+    "ctaIos": "Get it free on the App Store",
+    "ctaAndroid": "Join the Google Play early access",
+    "reassure": "30-second sign-up · First 2 weeks of Pro free · Cancel anytime — your notes stay on your phone.",
+    "othersLabel": "On desktop:",
+    "otherWeb": "Web app",
+    "otherExt": "Chrome extension",
+    "qrTitle": "Install on your phone",
+    "qrHint": "Point your camera to open the install page.",
+    "agentBubble": "I just summarized what you tossed in and filed it in your \"Reading\" folder.",
+    "stickyTitle": "First 2 weeks of Pro free",
+    "stickyCta": "Get the app",
+    "videoAlt": "Chaerok app intro video"
   },
   "features": {
-    "desc": "Focus on the act of recording itself, while Chaerok's intelligent engine automates the rest.",
-    "f1": {
-      "title": "Rapid Capture",
-      "desc": "Capture any moment instantly. Just drop in text, links, or images and Chaerok keeps them safe."
+    "title1": "You toss it in,",
+    "title2": "Chaerok remembers",
+    "desc": "Plenty of apps capture notes. Chaerok is different after the capture — organizing and resurfacing are Chaerok's job, not yours.",
+    "s1": {
+      "step": "STEP 1",
+      "title": "Toss it in as-is",
+      "desc": "Text, link, or photo — no titles, no folders to pick. One action from the share sheet, Chrome extension, or web."
     },
-    "f2": {
-      "title": "Intelligent Summary",
-      "desc": "Find the core within vast information. The AI agent transforms complex notes into intuitive briefings."
+    "s2": {
+      "step": "STEP 2",
+      "title": "Chaerok writes it up",
+      "desc": "It summarizes, tags, and connects new notes to older ones. The organizing you used to do is already done."
     },
-    "f3": {
-      "title": "Semantic Connection",
-      "desc": "Different thoughts meet to create new insights. The ontology-based graph UI visualizes the links between your ideas."
-    },
-    "title1": "Intelligent workflows",
-    "title2": "powered by AI"
+    "s3": {
+      "step": "STEP 3",
+      "title": "It comes back to you",
+      "desc": "Morning briefings and a weekly report revive what you forgot. Put it in, and it returns."
+    }
   },
   "ontology": {
-    "svg": {
-      "ai": "AI/ML",
-      "cloud": "Cloud",
-      "insight": "Insight",
-      "business": "Business",
-      "idea": "Idea"
+    "title1": "Not a storage bin —",
+    "title2": "a brain that speaks first",
+    "desc": "Most note apps stop at putting things in. Chaerok brings your notes back — so today's capture becomes material for tomorrow's thinking.",
+    "l1": {
+      "title": "Morning briefing",
+      "desc": "As your day starts, Chaerok hands you yesterday's captures and what's worth revisiting today."
     },
-    "title1": "Mapping Your Knowledge:",
-    "title2": "Semantic Ontology",
-    "desc": "Chaerok manages records not as a linear list, but as an organic web. As your thoughts grow, the knowledge graph becomes denser, suggesting new ideas you hadn't discovered before.",
-    "l1": "Automatic Node Connection Algorithm",
-    "l2": "Context-Based Knowledge Clustering",
-    "l3": "Visualization of Idea Convergence"
+    "l2": {
+      "title": "Weekly report",
+      "desc": "Chaerok weaves a week of scattered notes into one story."
+    },
+    "l3": {
+      "title": "Rediscovery",
+      "desc": "When an old note meets what you're thinking now, Chaerok surfaces it first."
+    },
+    "mock": {
+      "chip1": "Today's briefing",
+      "chip2": "2 connections",
+      "greeting": "Good morning. I summarized the two articles you saved yesterday.",
+      "link": "They connect to your \"Side project\" note from three weeks ago.",
+      "noteLabel": "Connected note",
+      "noteTitle": "Side project idea — written at dawn"
+    }
   },
   "extension": {
-    "badge": "Chrome extension",
-    "desc": "When you come across something worth keeping, save it without copying links around. Chaerok summarizes it and files it with tags.",
-    "btnDownload": "Add to Chrome",
-    "btnStore": "Add to Chrome",
-    "howTo": "How to install",
-    "installed": "Installed in this browser",
-    "openNotes": "Open Thought Notes",
-    "step1": "Unzip the file you downloaded.",
-    "step2": "Open chrome://extensions and turn on \"Developer mode\" in the top right.",
-    "step3": "Click \"Load unpacked\" and pick the unzipped folder.",
-    "f1": {
-      "title": "One click to save",
-      "desc": "Toolbar icon, right-click menu, or the Alt+Shift+C shortcut — whichever you reach for."
+    "title1": "Wherever a thought strikes,",
+    "title2": "that's the door",
+    "desc": "Capture on your phone, capture in Chrome, read on the web. Wherever it comes from, everything lands in one place.",
+    "app": {
+      "title": "Chaerok app",
+      "desc": "From capture to briefings — the heart of Chaerok. Start today on iPhone, or join the early access on Android.",
+      "cta": "Get the app"
     },
-    "f2": {
-      "title": "Save just the part you picked",
-      "desc": "Select a passage first and only that gets saved. Select nothing and it finds the article body."
+    "ext": {
+      "title": "Chrome extension",
+      "desc": "Capture the page you're reading, right where you are. Select a passage first and only that part comes along.",
+      "cta": "Add to Chrome",
+      "installed": "Installed in this browser"
     },
-    "f3": {
-      "title": "Lands with everything else",
-      "desc": "Pages saved here stack up alongside what you save on your phone. With Chaerok Pro they open on any device."
-    },
-    "title1": "Capture any page",
-    "title2": "right where you are"
+    "web": {
+      "title": "Web notes",
+      "desc": "Read what you captured on your phone, on a big screen. Connected through Chaerok Pro sync.",
+      "cta": "Open"
+    }
   },
   "pricing": {
     "badge": "Pricing",
-    "title": "Try Pro free for two weeks",
-    "desc": "Full-article understanding, image understanding, Chaerok's briefings and weekly report, cloud sync — Chaerok's real power lives in Pro. Try everything free for two weeks, then decide. The on-device basics stay free forever, no account required.",
+    "title": "₩163 a day — a second brain lighter than a coffee",
+    "desc": "Daily briefings, long reads understood in full, your notes on every device — it's the price of getting back the thoughts you used to lose. The basics are free forever without an account, and your first two weeks of Pro are free.",
     "free": {
       "name": "Chaerok",
-      "desc": "The easy way in — basics that run on your device",
-      "price": "$0",
+      "desc": "The light way in — core features that run on your device",
+      "price": "₩0",
       "period": "free forever",
       "features": [
-        "Unlimited text, URL, and image capture",
-        "Automatic tagging and folder sorting",
+        "Capture text, URLs, and images (unlimited)",
+        "Automatic tagging and folders",
         "On-device summaries",
         "Rule-based briefings",
         "Local semantic search"
       ],
-      "cta": "Start for Free"
+      "cta": "Get the app, start free"
     },
     "pro": {
       "name": "Chaerok Pro",
       "badge": "Pro",
-      "desc": "Understand long articles and photos in full, and pick up anywhere",
+      "desc": "Understands long reads and photos in full, on every device",
       "price": "₩4,900",
       "period": "/ month",
+      "perDay": "= ₩163 a day",
       "features": [
-        "Long-context understanding for full articles",
-        "Understanding of content inside images",
-        "AI memory linking — surfaces related notes automatically",
+        "Full long-form understanding (Long Context)",
+        "Understands what's inside images",
+        "AI memory links — related notes, suggested",
         "Daily briefings written by Chaerok",
-        "Weekly report — your week's thoughts as a story",
-        "Source translation",
-        "Cloud sync & backup, continue on any device",
-        "Web App & Chrome Extension support",
-        "Everything in the Free plan included"
+        "Weekly report — your week as a narrative",
+        "Full-text translation",
+        "Cloud sync & backup across devices",
+        "Web and Chrome extension support",
+        "Everything in the free plan"
       ],
-      "cta": "Start 2 Weeks Free",
-      "support": "✓ First 2 weeks free · cancel anytime"
+      "cta": "Start 2 weeks free",
+      "support": "✓ First 2 weeks free · Cancel anytime · Notes stay on your phone"
     },
-    "footnote": "* Prices shown may vary by store and are subject to change. The free trial is offered once per new subscription."
+    "footnote": "* Prices include VAT and may change per store policy. The free trial is offered once per new subscription. An annual plan (₩49,000) is in the works."
   },
   "privacy": {
-    "desc": "Because it holds your most intimate thoughts, we designed it with privacy as our top priority.",
+    "title1": "It's your second brain —",
+    "title2": "thoughts stay on your device",
+    "desc": "You're trusting it with what's in your head, so every free feature runs entirely on your device. Whether anything goes to the cloud is always your call.",
     "f1": {
-      "title": "Saved to Your Device First",
-      "desc": "Every note is stored on your device first. Whether anything goes to the cloud is always your call."
+      "title": "Saved on-device first",
+      "desc": "Every note lands on your device first. Offline or over any limit, your notes are safe."
     },
     "f2": {
-      "title": "Pick Up on Any Device",
-      "desc": "Turn on cloud sync with Chaerok Pro and the same notes follow you across phone, tablet, and web."
+      "title": "Encrypted in transit and at rest",
+      "desc": "Turn on cloud sync and both transfer and storage are encrypted. Leave it off, and summaries and search run on-device."
     },
     "f3": {
-      "title": "Encrypted in Transit and at Rest",
-      "desc": "With cloud processing and sync on, your data is encrypted in transit and at rest. With it off, summaries and search run on your device."
+      "title": "No hostage subscription",
+      "desc": "Cancel and every note stays on your device. Your records are never held on a server, so starting — and leaving — is light."
     },
     "mock": {
       "title": "Chaerok",
-      "desc": "The second brain that connects your thoughts"
-    },
-    "title1": "Today's insights become",
-    "title2": "tomorrow's wisdom."
+      "desc": "Your second brain that connects thoughts"
+    }
   },
   "faq": {
-    "title": "Frequently Asked Questions",
+    "title": "Frequently asked questions",
     "q1": "Can I use it for free?",
-    "a1": "The basics — capturing, organizing, and searching — are free forever and run on your device without an account. Long-context understanding, reading images, Chaerok's briefings and weekly report, and syncing across devices come with Chaerok Pro — and you can try all of it free for your first two weeks.",
-    "q2": "Is my data kept safe?",
-    "a2": "Your notes are stored on your device first. Sign in and turn on Chaerok Pro's cloud sync to back them up automatically and continue on other devices. However, bulk export features like Markdown or CSV formats are planned to be supported gradually.",
-    "q3": "Do you support languages other than Korean?",
-    "a3": "Currently, we fully support semantic analysis for Korean and English records, and we plan to gradually expand supported languages.",
+    "a1": "Core features — capture, organizing, search — are free forever on your device, no account needed. Full long-form understanding, image understanding, Chaerok's briefings and weekly report, and cross-device sync come with Chaerok Pro, and your first two weeks of Pro are free.",
+    "q2": "Is my data safe?",
+    "a2": "Notes are saved on your device first. Sign in and turn on Chaerok Pro cloud sync to back them up and continue on other devices. Bulk export to files like Markdown and CSV is coming gradually.",
+    "q3": "What happens to my notes if I cancel?",
+    "a3": "They all stay on your device. Only cloud sync stops — everything that runs on-device keeps working for free.",
+    "q4": "When can I use it on Android?",
+    "a4": "The full launch is in the works. You can start today through Google Play early access, and your notes carry over after launch.",
     "cta": {
-      "title": "Today's insights become tomorrow's wisdom.",
-      "desc": "Start Chaerok right now and cultivate your own digital knowledge garden.",
-      "btn1": "Download on the App Store",
-      "btn2": "Get it on Google Play",
-      "btn3": "Start on Web",
-      "btnAppStorePrefix": "Download on the",
-      "btnGooglePlayPrefix": "GET IT ON",
-      "btnDownloadAction": "App Store",
-      "btnAppStoreAction": "App Store",
-      "btnGooglePlayAction": "Google Play",
-      "btnWebPrefix": "Start on",
-      "btnWebAction": "Web"
-    }
+      "title": "From here on, Chaerok remembers for you",
+      "desc": "Before it slips away — Chaerok. Signing up takes 30 seconds."
+    },
+    "q5": "Do you support languages other than Korean?",
+    "a5": "Semantic analysis fully supports Korean and English today, with more languages coming gradually."
   },
   "footer": {
     "title": "Chaerok",

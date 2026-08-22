@@ -61,28 +61,30 @@ function homeShell(lang) {
        문장은 검색 메타(META desc)를 재사용한다 — 새 카피를 만들지 않는다. -->
   <p class="s-lede">${esc(META[lang]['/'].desc)}</p>
   <p class="s-lede">${esc(hero.desc)}</p>
-  <p class="s-note">${esc(hero.floatingDesc)}</p>
+  <p class="s-note">${esc(hero.reassure)}</p>
 
   <section>
     <h2>${esc(features.title1)} ${esc(features.title2)}</h2>
     <p>${esc(features.desc)}</p>
-    <h3>${esc(features.f1.title)}</h3><p>${esc(features.f1.desc)}</p>
-    <h3>${esc(features.f2.title)}</h3><p>${esc(features.f2.desc)}</p>
-    <h3>${esc(features.f3.title)}</h3><p>${esc(features.f3.desc)}</p>
+    <h3>${esc(features.s1.title)}</h3><p>${esc(features.s1.desc)}</p>
+    <h3>${esc(features.s2.title)}</h3><p>${esc(features.s2.desc)}</p>
+    <h3>${esc(features.s3.title)}</h3><p>${esc(features.s3.desc)}</p>
   </section>
 
   <section>
     <h2>${esc(ontology.title1)} ${esc(ontology.title2)}</h2>
     <p>${esc(ontology.desc)}</p>
-    ${list([ontology.l1, ontology.l2, ontology.l3])}
+    <h3>${esc(ontology.l1.title)}</h3><p>${esc(ontology.l1.desc)}</p>
+    <h3>${esc(ontology.l2.title)}</h3><p>${esc(ontology.l2.desc)}</p>
+    <h3>${esc(ontology.l3.title)}</h3><p>${esc(ontology.l3.desc)}</p>
   </section>
 
   <section>
-    <h2>${esc(extension.title1)} ${esc(extension.title2)}</h2>
-    <p>${esc(extension.desc)}</p>
-    <h3>${esc(extension.f1.title)}</h3><p>${esc(extension.f1.desc)}</p>
-    <h3>${esc(extension.f2.title)}</h3><p>${esc(extension.f2.desc)}</p>
-    <h3>${esc(extension.f3.title)}</h3><p>${esc(extension.f3.desc)}</p>
+    <h2>${esc(privacy.title1)} ${esc(privacy.title2)}</h2>
+    <p>${esc(privacy.desc)}</p>
+    <h3>${esc(privacy.f1.title)}</h3><p>${esc(privacy.f1.desc)}</p>
+    <h3>${esc(privacy.f2.title)}</h3><p>${esc(privacy.f2.desc)}</p>
+    <h3>${esc(privacy.f3.title)}</h3><p>${esc(privacy.f3.desc)}</p>
   </section>
 
   <section>
@@ -98,11 +100,11 @@ function homeShell(lang) {
   </section>
 
   <section>
-    <h2>${esc(privacy.title1)} ${esc(privacy.title2)}</h2>
-    <p>${esc(privacy.desc)}</p>
-    <h3>${esc(privacy.f1.title)}</h3><p>${esc(privacy.f1.desc)}</p>
-    <h3>${esc(privacy.f2.title)}</h3><p>${esc(privacy.f2.desc)}</p>
-    <h3>${esc(privacy.f3.title)}</h3><p>${esc(privacy.f3.desc)}</p>
+    <h2>${esc(extension.title1)} ${esc(extension.title2)}</h2>
+    <p>${esc(extension.desc)}</p>
+    <h3>${esc(extension.app.title)}</h3><p>${esc(extension.app.desc)}</p>
+    <h3>${esc(extension.ext.title)}</h3><p>${esc(extension.ext.desc)}</p>
+    <h3>${esc(extension.web.title)}</h3><p>${esc(extension.web.desc)}</p>
   </section>
 
   <section>
@@ -110,6 +112,8 @@ function homeShell(lang) {
     <h3>${esc(faq.q1)}</h3><p>${esc(faq.a1)}</p>
     <h3>${esc(faq.q2)}</h3><p>${esc(faq.a2)}</p>
     <h3>${esc(faq.q3)}</h3><p>${esc(faq.a3)}</p>
+    <h3>${esc(faq.q4)}</h3><p>${esc(faq.a4)}</p>
+    <h3>${esc(faq.q5)}</h3><p>${esc(faq.a5)}</p>
   </section>
 </main>
 <footer class="s-foot">
@@ -195,6 +199,8 @@ const faqLd = (lang) => {
       [t.q1, t.a1],
       [t.q2, t.a2],
       [t.q3, t.a3],
+      [t.q4, t.a4],
+      [t.q5, t.a5],
     ].map(([q, a]) => ({
       '@type': 'Question',
       name: q,
@@ -451,6 +457,8 @@ ${ko.pricing.pro.features.map((f) => `  - ${f}`).join('\n')}
 - ${ko.faq.q1} ${ko.faq.a1}
 - ${ko.faq.q2} ${ko.faq.a2}
 - ${ko.faq.q3} ${ko.faq.a3}
+- ${ko.faq.q4} ${ko.faq.a4}
+- ${ko.faq.q5} ${ko.faq.a5}
 
 ## In English
 

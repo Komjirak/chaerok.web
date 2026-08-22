@@ -1,44 +1,62 @@
 import { motion } from 'motion/react';
-import { GitCommit, Focus, Maximize } from 'lucide-react';
+import { Sunrise, BookOpenText, RotateCcw, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * 먼저 말 거는 뇌 — 브리핑·주간 리포트·재발견.
+ *
+ * 예전 판은 "시맨틱 온톨로지·클러스터링 알고리즘"을 추상 그래프로 보여줬다.
+ * 방문자에게 의미 있는 것은 용어가 아니라 받는 경험이라, 시각물을 채록이의
+ * 아침 브리핑 목업으로 바꿨다 — 다크 섹션(페이지 리듬)과 #ontology 앵커는
+ * 그대로 둔다(헤더 내비·외부 링크 보호).
+ */
 export function Ontology() {
   const { t } = useTranslation();
+
+  const items = [
+    { icon: Sunrise, title: t('ontology.l1.title'), desc: t('ontology.l1.desc') },
+    { icon: BookOpenText, title: t('ontology.l2.title'), desc: t('ontology.l2.desc') },
+    { icon: RotateCcw, title: t('ontology.l3.title'), desc: t('ontology.l3.desc') },
+  ];
 
   return (
     <section id="ontology" className="py-16 md:py-20 bg-[#362f29] text-surface-paper relative overflow-hidden">
       <div className="max-w-[1200px] mx-auto px-5 lg:px-10 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          
-          <div className="order-2 lg:order-1 relative h-[400px] lg:h-[500px] flex items-center justify-center">
-            {/* Visual representation of ontology/graph */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-80">
-              <svg viewBox="0 0 400 400" className="w-full h-full max-w-md stroke-surface-amber/20" strokeWidth="1" fill="none">
-                <motion.line x1="200" y1="200" x2="100" y2="100" animate={{ strokeDasharray: ["0, 100", "100, 0"] }} transition={{ duration: 3, repeat: Infinity }} />
-                <motion.line x1="200" y1="200" x2="300" y2="120" animate={{ strokeDasharray: ["0, 100", "100, 0"] }} transition={{ duration: 4, repeat: Infinity }} />
-                <motion.line x1="200" y1="200" x2="120" y2="280" animate={{ strokeDasharray: ["0, 100", "100, 0"] }} transition={{ duration: 2.5, repeat: Infinity }} />
-                <motion.line x1="200" y1="200" x2="320" y2="280" animate={{ strokeDasharray: ["0, 100", "100, 0"] }} transition={{ duration: 3.5, repeat: Infinity }} />
-                
-                {/* Central Node */}
-                <motion.circle animate={{ y: [-3, 3, -3] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} cx="200" cy="200" r="30" className="fill-chaerok-600/20 stroke-chaerok-600" strokeWidth="2" />
-                <motion.text animate={{ y: [-3, 3, -3] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} x="200" y="205" className="fill-surface-paper text-xs font-medium" textAnchor="middle">{t('ontology.svg.ai')}</motion.text>
-                
-                {/* Peripheral Nodes */}
-                <motion.circle animate={{ y: [-2, 2, -2] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} cx="100" cy="100" r="24" className="fill-[#362f29] stroke-surface-amber/50" />
-                <motion.text animate={{ y: [-2, 2, -2] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} x="100" y="104" className="fill-surface-paper/70 text-[10px]" textAnchor="middle">{t('ontology.svg.cloud')}</motion.text>
-                
-                <motion.circle animate={{ y: [-4, 4, -4] }} transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }} cx="300" cy="120" r="28" className="fill-[#362f29] stroke-surface-amber/50" />
-                <motion.text animate={{ y: [-4, 4, -4] }} transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }} x="300" y="124" className="fill-surface-paper/70 text-[10px]" textAnchor="middle">{t('ontology.svg.insight')}</motion.text>
-                
-                <motion.circle animate={{ x: [-2, 2, -2] }} transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }} cx="120" cy="280" r="20" className="fill-[#362f29] stroke-surface-amber/50" />
-                <motion.text animate={{ x: [-2, 2, -2] }} transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }} x="120" y="284" className="fill-surface-paper/70 text-[10px]" textAnchor="middle">{t('ontology.svg.business')}</motion.text>
-                
-                <motion.circle animate={{ y: [-3, 3, -3] }} transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }} cx="320" cy="280" r="26" className="fill-[#362f29] stroke-node-blue/50" />
-                <motion.text animate={{ y: [-3, 3, -3] }} transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }} x="320" y="284" className="fill-node-blue/90 text-[10px]" textAnchor="middle">{t('ontology.svg.idea')}</motion.text>
-              </svg>
+
+          {/* 브리핑 목업 — 앱의 홈 화면에서 채록이가 실제로 하는 말의 모양 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="order-2 lg:order-1 flex justify-center"
+          >
+            <div className="w-full max-w-[400px] rounded-3xl bg-surface-paper/5 border border-surface-paper/15 p-6 space-y-4">
+              <div className="flex items-center gap-2 text-xs font-medium text-surface-amber/90">
+                <span className="inline-block px-2.5 py-1 rounded-full bg-surface-amber/15">{t('ontology.mock.chip1')}</span>
+                <span className="inline-block px-2.5 py-1 rounded-full bg-surface-amber/15">{t('ontology.mock.chip2')}</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 w-9 h-9 rounded-full bg-chaerok-600 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-white" strokeWidth={2} aria-hidden />
+                </div>
+                <div className="space-y-3">
+                  <p className="rounded-2xl rounded-tl-md bg-surface-paper/10 px-4 py-3 text-sm leading-relaxed text-surface-paper/95">
+                    {t('ontology.mock.greeting')}
+                  </p>
+                  <p className="rounded-2xl rounded-tl-md bg-surface-paper/10 px-4 py-3 text-sm leading-relaxed text-surface-paper/95">
+                    {t('ontology.mock.link')}
+                  </p>
+                </div>
+              </div>
+              <div className="rounded-xl bg-surface-paper/10 border border-surface-paper/10 px-4 py-3">
+                <p className="text-xs text-surface-paper/60 mb-1">{t('ontology.mock.noteLabel')}</p>
+                <p className="text-sm font-medium text-surface-paper/90">{t('ontology.mock.noteTitle')}</p>
+              </div>
             </div>
-          </div>
-          
+          </motion.div>
+
           <div className="order-1 lg:order-2 text-center lg:text-left">
             <h2 className="text-3xl md:text-4xl font-serif mb-6 leading-tight">
               {t('ontology.title1')}<br className="md:hidden" /> {t('ontology.title2')}
@@ -46,23 +64,22 @@ export function Ontology() {
             <p className="text-lg text-surface-paper/70 leading-relaxed mb-10">
               {t('ontology.desc')}
             </p>
-            
+
             <div className="space-y-6">
-              {[
-                { icon: GitCommit, text: t('ontology.l1') },
-                { icon: Focus, text: t('ontology.l2') },
-                { icon: Maximize, text: t('ontology.l3') }
-              ].map((item, idx) => (
-                <div key={idx} className="flex flex-col lg:flex-row items-center gap-3 lg:gap-4 justify-center lg:justify-start">
-                  <div className="w-10 h-10 rounded-full bg-surface-paper/10 flex items-center justify-center text-surface-paper">
+              {items.map((item, idx) => (
+                <div key={idx} className="flex flex-col lg:flex-row items-center lg:items-start gap-3 lg:gap-4 justify-center lg:justify-start text-center lg:text-left">
+                  <div className="shrink-0 w-10 h-10 rounded-full bg-surface-paper/10 flex items-center justify-center text-surface-paper">
                     <item.icon className="w-5 h-5" strokeWidth={1.5} />
                   </div>
-                  <span className="font-medium text-surface-paper/90 text-center lg:text-left">{item.text}</span>
+                  <div>
+                    <div className="font-medium text-surface-paper/95 mb-1">{item.title}</div>
+                    <div className="text-sm text-surface-paper/60 leading-relaxed">{item.desc}</div>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-          
+
         </div>
       </div>
     </section>

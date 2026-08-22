@@ -1,32 +1,33 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, Apple, Play, Laptop } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/Button';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { APP_STORE_URL, PLAY_TESTING_URL } from '@/lib/storeLinks';
+import { useDevice, openAppStore } from '@/lib/appDownload';
 
+/**
+ * FAQ + 마무리 CTA.
+ *
+ * 질문 3→5개 — 클릭 직전의 두 반대("해지하면 기록은?", "Android는 언제?")를
+ * 추가했다. 마무리는 버튼 3개 동급 나열 대신 기기 인지 단일 CTA(dl_final)
+ * + 데스크톱 QR — 히어로와 같은 문법으로 닫는다.
+ */
 export function FAQ() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const device = useDevice();
 
   const faqs = [
-    {
-      q: t('faq.q1'),
-      a: t('faq.a1')
-    },
-    {
-      q: t('faq.q2'),
-      a: t('faq.a2')
-    },
-    {
-      q: t('faq.q3'),
-      a: t('faq.a3')
-    }
+    { q: t('faq.q1'), a: t('faq.a1') },
+    { q: t('faq.q2'), a: t('faq.a2') },
+    { q: t('faq.q3'), a: t('faq.a3') },
+    { q: t('faq.q4'), a: t('faq.a4') },
+    { q: t('faq.q5'), a: t('faq.a5') },
   ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const ctaLabel = device === 'android' ? t('hero.ctaAndroid') : t('hero.ctaIos');
 
   return (
     <section id="faq" className="py-16 md:py-20 bg-surface-paper">
@@ -34,21 +35,21 @@ export function FAQ() {
         <h2 className="text-3xl md:text-4xl font-serif text-center mb-16">
           {t('faq.title')}
         </h2>
-        
+
         <div className="space-y-4 mb-24">
           {faqs.map((faq, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="bg-white border border-surface-amber/50 rounded-2xl overflow-hidden shadow-sm"
             >
-              <button 
+              <button
                 className="w-full px-6 py-5 flex items-center justify-between text-left font-medium text-lg hover:bg-surface-amber/10 transition-colors"
                 onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
               >
                 {faq.q}
                 <ChevronDown className={cn("w-5 h-5 text-ink-muted transition-transform duration-300", openIndex === idx && "rotate-180")} />
               </button>
-              
+
               <AnimatePresence>
                 {openIndex === idx && (
                   <motion.div
@@ -66,33 +67,31 @@ export function FAQ() {
             </div>
           ))}
         </div>
-        
-        <div className="text-center bg-surface-paper border border-surface-amber rounded-3xl p-12">
+
+        {/* 마무리 — 피치덱 08P. 히어로와 같은 문법(단일 CTA + 안심 문구 + QR) */}
+        <div className="text-center bg-white border border-surface-amber rounded-3xl p-12">
           <h2 className="text-2xl md:text-3xl font-serif mb-4">{t('faq.cta.title')}</h2>
-          <p className="text-ink-muted mb-10">{t('faq.cta.desc')}</p>
-          
-          <div className="flex flex-row flex-wrap justify-center gap-2 sm:gap-4">
-            <Button size="lg" className="bg-ink-dark hover:bg-ink-dark/80 px-4 sm:px-6 h-auto py-3 flex-col gap-1 text-white" onClick={() => window.open(APP_STORE_URL, '_blank', 'noopener')}>
-              <Apple className="w-6 h-6 mb-1" />
-              <div className="flex flex-col items-center leading-tight">
-                <span className="text-[10px] sm:text-xs text-white/80">{t('faq.cta.btnAppStorePrefix')}</span>
-                <span className="text-sm font-semibold">{t('faq.cta.btnAppStoreAction')}</span>
-              </div>
+          <p className="text-ink-muted mb-8">{t('faq.cta.desc')}</p>
+
+          <div className="flex flex-col items-center gap-3">
+            <Button
+              size="lg"
+              className="rounded-full px-10 shadow-ambient"
+              onClick={() => openAppStore('dl_final', device)}
+            >
+              {ctaLabel}
             </Button>
-            <Button size="lg" className="bg-ink-dark hover:bg-ink-dark/80 px-4 sm:px-6 h-auto py-3 flex-col gap-1 text-white" onClick={() => window.open(PLAY_TESTING_URL, '_blank', 'noopener')}>
-              <Play className="w-6 h-6 mb-1" />
-              <div className="flex flex-col items-center leading-tight">
-                <span className="text-[10px] sm:text-xs text-white/80">{t('faq.cta.btnGooglePlayPrefix')}</span>
-                <span className="text-sm font-semibold">{t('faq.cta.btnGooglePlayAction')}</span>
+            <p className="text-sm text-ink-muted">{t('hero.reassure')}</p>
+
+            {device === 'desktop' && (
+              <div className="mt-4 inline-flex items-center gap-4 rounded-2xl bg-surface-paper border border-surface-amber px-5 py-4 text-left">
+                <img src="/qr-appstore.svg" alt={t('hero.qrTitle')} className="w-20 h-20" />
+                <div>
+                  <p className="text-sm font-medium text-ink-dark">{t('hero.qrTitle')}</p>
+                  <p className="text-xs text-ink-muted">{t('hero.qrHint')}</p>
+                </div>
               </div>
-            </Button>
-            <Button size="lg" className="bg-ink-dark hover:bg-ink-dark/80 px-4 sm:px-6 h-auto py-3 flex-col gap-1 text-white" onClick={() => navigate('/notes')}>
-              <Laptop className="w-6 h-6 mb-1" />
-              <div className="flex flex-col items-center leading-tight">
-                <span className="text-[10px] sm:text-xs text-white/80">{t('faq.cta.btnWebPrefix')}</span>
-                <span className="text-sm font-semibold">{t('faq.cta.btnWebAction')}</span>
-              </div>
-            </Button>
+            )}
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import logoImg from '@/assets/logo.png';
+import { useDevice, openAppStore } from '@/lib/appDownload';
 
 export function Header() {
   const { t } = useTranslation();
@@ -13,6 +14,7 @@ export function Header() {
   const location = useLocation();
   // 영어 페이지에서는 링크도 /en 아래로 — 안 그러면 메뉴 한 번에 한국어로 떨어진다
   const lp = useLocalePath();
+  const device = useDevice();
 
   // Close mobile menu on navigation
   useEffect(() => {
@@ -22,6 +24,13 @@ export function Header() {
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = () => setIsOpen(false);
 
+  // 페이지에서 가장 눈에 띄는 상시 버튼 — 예전엔 /notes(읽기 전용 웹 뷰어)로
+  // 갔다. 로그인 없는 방문자에게는 빈 화면이라, 방문 기기의 스토어로 보낸다.
+  const download = () => {
+    closeMenu();
+    openAppStore('dl_header', device);
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-surface-paper/80 border-b border-surface-amber/30">
       <div className="max-w-[1200px] mx-auto px-5 lg:px-10 h-16 flex items-center justify-between">
@@ -29,7 +38,7 @@ export function Header() {
           <img src={logoImg} alt="채록 로고" className="w-8 h-8 object-contain" />
           <span className="font-serif font-semibold text-xl tracking-tight">{t('header.title')}</span>
         </Link>
-        
+
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
           <Link to={lp("/#features")} className="text-sm font-medium text-ink-muted hover:text-chaerok-600 transition-colors">{t('header.nav.features')}</Link>
@@ -37,10 +46,10 @@ export function Header() {
           <Link to={lp("/#pricing")} className="text-sm font-medium text-ink-muted hover:text-chaerok-600 transition-colors">{t('header.nav.pricing')}</Link>
           <Link to={lp("/#faq")} className="text-sm font-medium text-ink-muted hover:text-chaerok-600 transition-colors">{t('header.nav.faq')}</Link>
         </nav>
-        
+
         <div className="flex items-center gap-3">
           <div className="hidden sm:block">
-            <Link to={lp("/notes")}><Button size="sm">{t('header.try')}</Button></Link>
+            <Button size="sm" onClick={download}>{t('header.try')}</Button>
           </div>
 
           {/* Mobile Hamburger Toggle Button */}
@@ -95,7 +104,7 @@ export function Header() {
                 {t('header.nav.faq')}
               </Link>
               <div className="pt-2 sm:hidden">
-                <Link to={lp("/notes")} onClick={closeMenu} className="w-full"><Button size="sm" className="w-full justify-center">{t('header.try')}</Button></Link>
+                <Button size="sm" className="w-full justify-center" onClick={download}>{t('header.try')}</Button>
               </div>
             </nav>
           </motion.div>
