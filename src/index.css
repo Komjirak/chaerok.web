@@ -25,10 +25,21 @@
 @layer base {
   body {
     @apply bg-surface-paper text-ink-dark font-sans antialiased;
+    /* 한국어는 어절(띄어쓰기) 단위로만 줄을 바꾼다 — "몫이에\n요" 같은
+       글자 중간 절단을 막는다. 영어는 원래 공백에서만 꺾이므로 영향이 없다. */
+    word-break: keep-all;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* 본문 설명문의 두 줄 균형 — Tailwind에 text-balance가 없는 버전 대비 정의.
+     인용문("…달라요 — / 정리도…")이 한쪽으로 쏠리지 않게 줄 길이를 맞춘다. */
+  .text-balance {
+    text-wrap: balance;
   }
 }
 

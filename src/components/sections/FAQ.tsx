@@ -71,7 +71,7 @@ export function FAQ() {
         {/* 마무리 — 피치덱 08P. 히어로와 같은 문법(단일 CTA + 안심 문구 + QR) */}
         <div className="text-center bg-white border border-surface-amber rounded-3xl p-12">
           <h2 className="text-2xl md:text-3xl font-serif mb-4">{t('faq.cta.title')}</h2>
-          <p className="text-ink-muted mb-8">{t('faq.cta.desc')}</p>
+          <p className="text-ink-muted mb-8 text-balance">{t('faq.cta.desc')}</p>
 
           <div className="flex flex-col items-center gap-3">
             <Button

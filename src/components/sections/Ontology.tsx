@@ -62,7 +62,7 @@ export function Ontology() {
             <h2 className="text-3xl md:text-4xl font-serif mb-6 leading-tight">
               {t('ontology.title1')}<br /> {t('ontology.title2')}
             </h2>
-            <p className="text-lg text-surface-paper/70 leading-relaxed mb-10">
+            <p className="text-lg text-surface-paper/70 leading-relaxed mb-10 text-balance">
               {t('ontology.desc')}
             </p>
 

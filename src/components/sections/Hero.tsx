@@ -178,7 +178,7 @@ export function Hero() {
               <span className="text-chaerok-600">{t('hero.title2')}</span>
             </h1>
 
-            <p className="text-lg text-ink-muted leading-relaxed mb-6">
+            <p className="text-lg text-ink-muted leading-relaxed mb-6 text-balance">
               {t('hero.desc')}
             </p>
 

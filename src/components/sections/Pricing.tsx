@@ -28,7 +28,7 @@ export function Pricing() {
           <h2 className="text-3xl md:text-4xl font-serif mb-6">
             {t('pricing.title')}
           </h2>
-          <p className="text-lg text-ink-muted leading-relaxed">
+          <p className="text-lg text-ink-muted leading-relaxed text-balance">
             {t('pricing.desc')}
           </p>
         </div>

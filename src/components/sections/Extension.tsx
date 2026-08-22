@@ -29,7 +29,7 @@ export function Extension() {
           <h2 className="text-3xl md:text-4xl font-serif mb-6 leading-tight">
             {t('extension.title1')}<br className="md:hidden" /> {t('extension.title2')}
           </h2>
-          <p className="text-lg text-ink-muted leading-relaxed">
+          <p className="text-lg text-ink-muted leading-relaxed text-balance">
             {t('extension.desc')}
           </p>
         </div>
