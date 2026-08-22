@@ -100,12 +100,12 @@
   },
   "pricing": {
     "badge": "Pricing",
-    "title": "₩163 a day — a second brain lighter than a coffee",
+    "title": "About 12¢ a day — a second brain lighter than a coffee",
     "desc": "Daily briefings, long reads understood in full, your notes on every device — it's the price of getting back the thoughts you used to lose. The basics are free forever without an account, and your first two weeks of Pro are free.",
     "free": {
       "name": "Chaerok",
       "desc": "The light way in — core features that run on your device",
-      "price": "₩0",
+      "price": "$0",
       "period": "free forever",
       "features": [
         "Capture text, URLs, and images (unlimited)",
@@ -120,9 +120,9 @@
       "name": "Chaerok Pro",
       "badge": "Pro",
       "desc": "Understands long reads and photos in full, on every device",
-      "price": "₩4,900",
+      "price": "≈ US$3.50",
       "period": "/ month",
-      "perDay": "= ₩163 a day",
+      "perDay": "≈ 12¢ a day",
       "features": [
         "Full long-form understanding (Long Context)",
         "Understands what's inside images",
@@ -137,7 +137,7 @@
       "cta": "Start 2 weeks free",
       "support": "✓ First 2 weeks free · Cancel anytime · Notes stay on your phone"
     },
-    "footnote": "* Prices include VAT and may change per store policy. The free trial is offered once per new subscription. An annual plan (₩49,000) is in the works."
+    "footnote": "* Billed through the App Store or Google Play in your local currency — the Korean list price is ₩4,900/month (≈ US$3.50), and the exact amount can vary slightly by country and store. Prices include VAT. The free trial is offered once per new subscription. An annual plan is in the works."
   },
   "privacy": {
     "title1": "It's your second brain —",
