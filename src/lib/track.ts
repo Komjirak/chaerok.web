@@ -21,26 +21,37 @@ function installId(): string {
   }
 }
 
+type Platform = 'web' | 'ext' | 'note';
+
 /**
- * 경로 → 이벤트 이름. **정해진 목록에서만 고른다** — 경로를 그대로 보내면
+ * 경로 → 이벤트 이름 + 플랫폼. **정해진 목록에서만 고른다** — 경로를 그대로 보내면
  * 쿼리스트링(담기 창의 페이지 본문!)이 통계에 섞여 들어간다.
+ *
+ * ⚠️ 표면이 둘이라 플랫폼을 가른다: 소개(`/`)는 익명 획득이라 `web`, 노트 뷰어
+ * (`/notes`)는 Pro 리텐션이라 `note`. 운영 콘솔이 방문 기기(UV)를 소개/노트로
+ * 갈라 세운다(서버 track이 platform으로 UV·이벤트를 나눈다). 나머지 정적
+ * 페이지(약관·처리방침 등)는 소개와 같은 획득 표면이라 `web`으로 둔다.
+ *
+ * ⚠️ UV는 그 기기의 **그날 첫 방문 표면**으로 잡힌다(서버가 installId당 하루
+ * 한 번만 센다). 그래서 `note` UV는 "그날 첫 웹 접점이 노트였던 기기" 수이고,
+ * 노트 페이지 조회 자체는 `pv_notes` 이벤트가 페이지뷰로 정확히 센다.
  */
-const PAGE_EVENTS: Record<string, string> = {
-  '/': 'pv_home',
-  '/notes': 'pv_notes',
-  '/privacy': 'pv_privacy',
-  '/terms': 'pv_terms',
-  '/delete-account': 'pv_delete_account',
+const PAGE_EVENTS: Record<string, { name: string; platform: Platform }> = {
+  '/': { name: 'pv_home', platform: 'web' },
+  '/notes': { name: 'pv_notes', platform: 'note' },
+  '/privacy': { name: 'pv_privacy', platform: 'web' },
+  '/terms': { name: 'pv_terms', platform: 'web' },
+  '/delete-account': { name: 'pv_delete_account', platform: 'web' },
   // '/save'는 여기 없다 — 담기 창은 Save.tsx가 save_open/save_done 퍼널로 따로 센다
 };
 
 export function trackPageView(pathname: string): void {
-  const name = PAGE_EVENTS[pathname];
-  if (name) trackEvent(name, 'web');
+  const e = PAGE_EVENTS[pathname];
+  if (e) trackEvent(e.name, e.platform);
 }
 
 /** 실패는 조용히 버린다 — 통계가 저장 흐름을 막으면 안 된다 */
-export function trackEvent(name: string, platform: 'web' | 'ext' = 'web'): void {
+export function trackEvent(name: string, platform: Platform = 'web'): void {
   if (import.meta.env.DEV) return;
   try {
     void fetch(TRACK_URL, {
