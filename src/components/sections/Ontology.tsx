@@ -58,8 +58,9 @@ export function Ontology() {
           </motion.div>
 
           <div className="order-1 lg:order-2 text-center lg:text-left">
+            {/* 두 줄이 하나의 대구(창고↔뇌)라 데스크톱에서도 항상 줄을 가른다 (PO 지시) */}
             <h2 className="text-3xl md:text-4xl font-serif mb-6 leading-tight">
-              {t('ontology.title1')}<br className="md:hidden" /> {t('ontology.title2')}
+              {t('ontology.title1')}<br /> {t('ontology.title2')}
             </h2>
             <p className="text-lg text-surface-paper/70 leading-relaxed mb-10">
               {t('ontology.desc')}

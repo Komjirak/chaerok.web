@@ -25,8 +25,9 @@ export function Privacy() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
 
           <div className="text-center lg:text-left">
+            {/* 온톨로지 절과 같은 이유 — 조건절/귀결절을 데스크톱에서도 줄로 가른다 */}
             <h2 className="text-3xl md:text-4xl font-serif mb-6 leading-tight">
-              {t('privacy.title1')}<br className="md:hidden" /> {t('privacy.title2')}
+              {t('privacy.title1')}<br /> {t('privacy.title2')}
             </h2>
             <p className="text-lg text-ink-muted leading-relaxed mb-12">
               {t('privacy.desc')}
