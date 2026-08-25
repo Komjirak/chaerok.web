@@ -258,6 +258,19 @@ const META = {
       lede: '크롬 익스텐션이 여는 창입니다.',
       noindex: true,
     },
+    /*
+      공유 리다이렉트(`/r?u=원본`). 앱이 공유하는 링크의 착지점이다. 메신저
+      크롤러가 이 정적 HTML의 OG를 긁어 **브랜드 카드**를 그린다 — 그래서
+      제목·설명이 기록 내용이 아니라 채록 브랜드다(프라이버시). og:image는
+      기존 브랜드 커버를 그대로 쓴다. 언어 중립이라 ko 한 벌만 만든다.
+    */
+    '/r': {
+      title: '채록으로 정리한 기록',
+      desc: '흘려보낸 생각과 링크를 채록이 대신 정리하고 연결해 드려요. 채록 — 당신의 두 번째 뇌.',
+      heading: '채록으로 정리한 기록',
+      lede: '원문으로 이동합니다.',
+      noindex: true,
+    },
   },
   en: {
     '/': {
@@ -299,7 +312,7 @@ const META = {
   },
 };
 
-const PATHS = ['/', '/terms', '/privacy', '/delete-account', '/notes', '/save'];
+const PATHS = ['/', '/terms', '/privacy', '/delete-account', '/notes', '/save', '/r'];
 const CHANGEFREQ = { '/': 'weekly', '/terms': 'monthly', '/privacy': 'monthly', '/delete-account': 'yearly' };
 
 /** 언어별 실제 주소. 한국어가 기본이라 접두어가 없다. */
@@ -387,6 +400,8 @@ let count = 0;
 for (const lang of ['ko', 'en']) {
   for (const p of PATHS) {
     const meta = META[lang][p];
+    // 언어 중립 페이지(예: `/r`)는 ko 한 벌만 있다 — en 루프에서는 건너뛴다
+    if (!meta) continue;
     const shell = p === '/' ? homeShell(lang) : pageShell(lang, meta.heading, meta.lede);
     const html = template
       .replace(LANG_RE, `<html lang="${lang}"`)
@@ -398,7 +413,7 @@ for (const lang of ['ko', 'en']) {
     count += 1;
   }
 }
-console.log(`prerender: ${count}개 페이지 (ko ${PATHS.length} · en ${PATHS.length})`);
+console.log(`prerender: ${count}개 페이지`);
 
 // sitemap — 색인 대상만. 언어끼리 xhtml:link로 서로를 가리킨다.
 const indexed = PATHS.filter((p) => !META.ko[p].noindex);

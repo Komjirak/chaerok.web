@@ -19,6 +19,7 @@ import { PrivacyPolicy } from '@/pages/PrivacyPolicy';
 import { DeleteAccount } from '@/pages/DeleteAccount';
 import { Notes } from '@/pages/Notes';
 import { Save } from '@/pages/Save';
+import { Redirect } from '@/pages/Redirect';
 
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -100,7 +101,8 @@ function LanguageGate() {
   const { i18n } = useTranslation();
   const english = isEnglishPath(pathname);
   // 개인용 화면은 주소에 언어를 붙이지 않는다 — 저장된 선택·지역을 그대로 따른다
-  const languageFreePath = pathname === '/save' || pathname === '/notes';
+  // `/r`은 공유 리다이렉트라 언어별 주소로 튕기면 안 된다(넘길 목적지가 쿼리에 있다)
+  const languageFreePath = pathname === '/save' || pathname === '/notes' || pathname === '/r';
 
   useEffect(() => {
     if (languageFreePath) return;
@@ -140,6 +142,8 @@ export default function App() {
       <LanguageGate />
       <Routes>
         <Route path="/save" element={<Save />} />
+        {/* 공유 브랜드 리다이렉트 — 껍데기 없이 독립. 크롤러는 프리렌더된 브랜드 OG를 본다 */}
+        <Route path="/r" element={<Redirect />} />
         {/* 언어별 주소. 두 갈래가 같은 Shell을 쓴다 */}
         <Route path="/en" element={<Shell />} />
         <Route path="/en/*" element={<Shell />} />
