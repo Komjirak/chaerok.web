@@ -79,12 +79,14 @@ export function Pricing() {
             <div className="inline-block text-xs font-medium text-chaerok-800 bg-surface-amber/30 rounded-md px-2 py-1 mb-6 self-start">
               {t('pricing.pro.support')}
             </div>
-            <div className="mb-8 flex items-baseline gap-2">
+            <div className="mb-2 flex items-baseline gap-2">
               <span className="text-4xl font-serif font-medium">{t('pricing.pro.price')}</span>
               <span className="text-ink-muted">{t('pricing.pro.period')}</span>
               {/* 가격 앵커 — 월 4,900원을 하루 단위로 되읽어 준다 */}
               <span className="text-sm text-chaerok-600 font-medium">{t('pricing.pro.perDay')}</span>
             </div>
+            {/* 연간(08-27 iOS 오픈) — 값은 앱 페이월과 같은 "2개월 무료" 프레이밍 */}
+            <p className="text-sm text-ink-muted mb-8">{t('pricing.pro.yearly')}</p>
             <ul className="space-y-3 mb-8 flex-1">
               {proFeatures.map((feature, idx) => (
                 <li key={idx} className="flex items-start gap-3 text-ink-dark">

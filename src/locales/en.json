@@ -123,6 +123,7 @@
       "price": "US$2.99",
       "period": "/ month",
       "perDay": "≈ 10¢ a day",
+      "yearly": "Or pay yearly and get 2 months free — ₩49,000/yr in Korea, local pricing in your store",
       "features": [
         "Full long-form understanding (Long Context)",
         "Understands what's inside images",
@@ -137,7 +138,7 @@
       "cta": "Start 2 weeks free",
       "support": "✓ First 2 weeks free · Cancel anytime · Notes stay on your phone"
     },
-    "footnote": "* Billed through the App Store or Google Play in your local currency — US$2.99/month in the US, ₩4,900/month in Korea; prices include VAT and can vary slightly by country. The free trial is offered once per new subscription. An annual plan is in the works."
+    "footnote": "* Billed through the App Store or Google Play in your local currency — US$2.99/month in the US, ₩4,900/month in Korea; prices include VAT and can vary slightly by country. The free trial is offered once per new subscription. The annual plan (2 months free vs monthly) is available on iOS today, with Android coming soon."
   },
   "privacy": {
     "title1": "It's your second brain —",
